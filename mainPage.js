@@ -109,10 +109,6 @@ document.addEventListener("DOMContentLoaded", async() =>
                 alert("Failed to retrieve generation. Please try again later.");
             }
             
-            console.log("outputting generation");
-            console.log(generation);
-            console.log(selectedPokemon)
-
             let typeTemp;
             if (generation == "I" || generation == "II" || generation == "III" || generation == "IV" || generation == "V" )
             {
@@ -123,7 +119,6 @@ document.addEventListener("DOMContentLoaded", async() =>
                 typeTemp = selectedPokemon.primary_type;          //assigns primary type for game generations that are 6+
             }
             const primaryType = typeTemp;
-            console.log(primaryType)
         
             const caughtValue = document.querySelector('input[name="caughtInput"]:checked').value;
 
@@ -197,35 +192,128 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         second_pair: secondPair,
         rostered: rosterValue
     };
-    
-    try     
+
+    let firstPairGame = null;
+    let secondPairGame = null;
+    let firstPairType = null;
+    let secondPairType = null;
+
+    try 
     {
-        const response = await fetch("http://localhost:8000/pairs", 
+        const response = await fetch(`http://localhost:8000/encounters/game?encounter_name=${firstPair}`,                    //gets and assigns gameID from corresponding first pair
         {
-            method: "POST",
+            method: "GET",
             headers: 
             {
-                "Content-Type": "application/json",                     //prepares post for game by JSON
-            },
-            body: JSON.stringify(gameData),
+                "Content-Type": "application/json"
+            }
         });
-    
-        const result = await response.json();
-    
-        if (response.ok) 
-        {
-            alert(`Pair created successfully with ID: ${result.pair_id}`);          //posts if successful
-        } 
-    
-        else 
-        {
-            console.error(result.message);                  //error if unsuccessful post
-            alert(`Error: ${result.message}`);
-        }
-    
+
+        const result = await response.json(); 
+        firstPairGame = result.gameID; 
+            
     } catch (error) 
     {
-        console.error("Error submitting form:", error);                 //error if form submission occurs
-        alert("Failed to create the pair. Please try again later.");
+        console.error("Error fetching game ID for first pair:", error); 
+        alert("Failed to retrieve game ID. Please try again later.");
+    }
+
+    try 
+    {
+        const response = await fetch(`http://localhost:8000/encounters/game?encounter_name=${secondPair}`,                    //gets and assigns gameID from corresponding second pair
+        {
+            method: "GET",
+            headers: 
+            {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const result = await response.json(); 
+        secondPairGame = result.gameID; 
+            
+    } catch (error) 
+    {
+        console.error("Error fetching game ID for second pair:", error); 
+        alert("Failed to retrieve game ID. Please try again later.");
+    }
+
+    try 
+    {
+        const response = await fetch(`http://localhost:8000/encounters/type?encounter_name=${firstPair}`,                    //gets and assigns primaryType from corresponding first pair
+        {
+            method: "GET",
+            headers: 
+            {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const result = await response.json(); 
+        firstPairType = result.primary_type; 
+            
+    } catch (error) 
+    {
+        console.error("Error fetching primary type for first pair:", error); 
+        alert("Failed to retrieve primary type. Please try again later.");
+    }
+
+    try 
+    {
+        const response = await fetch(`http://localhost:8000/encounters/type?encounter_name=${secondPair}`,                    //gets and assigns primaryType from corresponding second pair
+        {
+            method: "GET",
+            headers: 
+            {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const result = await response.json(); 
+        secondPairType = result.primary_type; 
+            
+    } catch (error) 
+    {
+        console.error("Error fetching primary type for second pair:", error); 
+        alert("Failed to retrieve primary type. Please try again later.");
+    }
+    
+    if ((firstPairGame == secondPairGame) && (firstPairType != secondPairType))
+    {
+        try     
+        {
+            const response = await fetch("http://localhost:8000/pairs", 
+            {
+                method: "POST",
+                headers: 
+                {
+                    "Content-Type": "application/json",                     //prepares post for game by JSON
+                },
+                body: JSON.stringify(gameData),
+            });
+        
+            const result = await response.json();
+        
+            if (response.ok) 
+            {
+                alert(`Pair created successfully with ID: ${result.pair_id}`);          //posts if successful
+            } 
+        
+            else 
+            {
+                console.error(result.message);                  //error if unsuccessful post
+                alert(`Error: ${result.message}`);
+            }
+        
+        } catch (error) 
+        {
+            console.error("Error submitting form:", error);                 //error if form submission occurs
+            alert("Failed to create the pair. Please try again later.");
+        }
+    }
+    
+    else
+    {
+        alert("Cannot create pair that has the same primary type")
     }
 });
