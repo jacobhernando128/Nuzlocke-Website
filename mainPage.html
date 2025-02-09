@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <title>Main Page</title>
+    <script src="mainPage.js" defer></script>
+</head>
+<body>
+    <h1>Create a new game</h1>
+
+    <form id="CreateGame">  
+
+        </div>
+            <label for="GameName">Game name:</label>
+            <input type="text" id="GameName" placeholder="Pokemon Red" required><br>
+        <div>  
+
+        <div>
+            <label for="generation">Select a generation:</label>
+            <select id="generation" name="version">
+                <option value="I">I</option>
+                <option value="II">II</option>
+                <option value="III">III</option>
+                <option value="IV">IV</option>
+                <option value="V">V</option>
+                <option value="VI">VI</option>
+                <option value="VII">VII</option>
+                <option value="VIII">VIII</option>
+                <option value="VIIII">VIIII</option>
+                <option value="Rom hack">Rom hack</option><br>
+            </select>
+        </div>
+
+        <div>   
+            <label for="challengeType">Challenge Type:</label>
+
+            <label>Soul Link</label>
+            <input type="radio" name="challengeType" value="Soul Link" checked>
+
+            <label>Nuzlocke</label>
+            <input type="radio" name="challengeType" value="Nuzlocke">
+        </div>
+
+        <div>
+            <label for="challengeNotes">Challenge Notes:</label>
+            <input type="text" id="challengeNotes" placeholder="Monotype, IronMon...">
+        </div>
+
+        <button type="submit">Create Game</button>
+
+    </form>
+
+    <h1>Create a new encounter</h1>
+
+    <form id="CreateEncounter">
+
+        <div>
+            <label for="GameID">Enter GameID</label>
+            <input type="number" id="GameID" required>
+        </div>
+
+        <div>  
+            <label for="encounterInput">Choose a Pokémon:</label>
+            <input type="text" id="encounterInput" list="pokemonList" placeholder="Bidoof" required>
+            <datalist id="pokemonList"></datalist>
+        </div>
+
+        <div>
+            <label for="locationInput">Specify encounter location:</label>
+            <input type="text" id="locationInput" required>
+        </div>
+
+        <div>
+            <label for="caughtInput">Caught?</label>
+
+            <label>Yes</label>
+            <input type="radio" name="caughtInput" value="1" checked>
+
+            <label>No</label>
+            <input type="radio" name="caughtInput" value="0">
+        </div>
+
+        <button type="submit">Create Encounter</button>
+
+    </form>
+
+    <h1>Create a new pair</h1>
+
+    <form id="CreatePair">
+        <div>   
+            <label for="firstPair">Enter Encounter 1</label>
+            <input type="number" id="firstPair" required>
+        </div>
+
+        <div>   
+            <label for="secondPair">Enter Encounter 2</label>
+            <input type="number" id="secondPair" required>
+        </div>
+
+        <div>
+            <label for="rosterInput">Rostered?</label>
+
+            <label>Yes</label>
+            <input type="radio" name="rosterInput" value="1" checked>
+
+            <label>No</label>
+            <input type="radio" name="rosterInput" value="0">
+        </div>
+
+        <button type="submit">Create Pair</button>
+
+    </form>
+</body>
+</html>
+
