@@ -200,7 +200,7 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
 
     try 
     {
-        const response = await fetch(`http://localhost:8000/encounters/game?encounter_name=${firstPair}`,                    //gets and assigns gameID from corresponding first pair
+        const response = await fetch(`http://localhost:8000/encounters/game?encounter_id=${firstPair}`,                    //gets and assigns gameID from corresponding first pair
         {
             method: "GET",
             headers: 
@@ -210,7 +210,7 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         });
 
         const result = await response.json(); 
-        firstPairGame = result.gameID; 
+        firstPairGame = result.game_id; 
             
     } catch (error) 
     {
@@ -220,7 +220,7 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
 
     try 
     {
-        const response = await fetch(`http://localhost:8000/encounters/game?encounter_name=${secondPair}`,                    //gets and assigns gameID from corresponding second pair
+        const response = await fetch(`http://localhost:8000/encounters/game?encounter_id=${secondPair}`,                    //gets and assigns gameID from corresponding second pair
         {
             method: "GET",
             headers: 
@@ -230,17 +230,17 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         });
 
         const result = await response.json(); 
-        secondPairGame = result.gameID; 
+        secondPairGame = result.game_id; 
             
     } catch (error) 
     {
         console.error("Error fetching game ID for second pair:", error); 
         alert("Failed to retrieve game ID. Please try again later.");
-    }
+    } 
 
     try 
     {
-        const response = await fetch(`http://localhost:8000/encounters/type?encounter_name=${firstPair}`,                    //gets and assigns primaryType from corresponding first pair
+        const response = await fetch(`http://localhost:8000/encounters/type?encounter_id=${firstPair}`,                    //gets and assigns primaryType from corresponding first pair
         {
             method: "GET",
             headers: 
@@ -260,7 +260,7 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
 
     try 
     {
-        const response = await fetch(`http://localhost:8000/encounters/type?encounter_name=${secondPair}`,                    //gets and assigns primaryType from corresponding second pair
+        const response = await fetch(`http://localhost:8000/encounters/type?encounter_id=${secondPair}`,                    //gets and assigns primaryType from corresponding second pair
         {
             method: "GET",
             headers: 
@@ -278,7 +278,12 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         alert("Failed to retrieve primary type. Please try again later.");
     }
     
-    if ((firstPairGame == secondPairGame) && (firstPairType != secondPairType))
+    console.log(firstPairType);
+    console.log(secondPairType);                //tester functions
+    console.log(firstPairGame);
+    console.log(secondPairGame);
+
+    if ((firstPairGame == secondPairGame) && (firstPairType != secondPairType))         
     {
         try     
         {
