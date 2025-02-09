@@ -16,6 +16,8 @@ const ConNuzlocke = mysql.createPool({
     database:"nuzlockedatabase"
 })
 
+
+
 app.get("/games", (req, res, next) => {                 //gets data for all created games
     let strCommand = "SELECT * FROM tblGames"; 
 
@@ -35,6 +37,8 @@ app.get("/games", (req, res, next) => {                 //gets data for all crea
         }
     });
 });
+
+
 
 app.get("/encounters", (req, res, next) => {            //gets data for all posted encounters for specific game
     let strGameID = req.query.game_id;
@@ -57,6 +61,8 @@ app.get("/encounters", (req, res, next) => {            //gets data for all post
     });
 });
 
+
+
 app.get("/pairs", (req, res, next) => {                 //gets data for all posted pairs
     let strGameID = req.query.game_id;
     let strCommand = "SELECT tblPairs.PairID, tblPairs.FirstPair, tblPairs.SecondPair, tblPairs.Rostered, e1.GameID AS FirstGameID, e2.GameID AS SecondGameID FROM tblPairs JOIN tblEncounters e1 ON tblPairs.FirstPair = e1.EncounterID JOIN tblEncounters e2 ON tblPairs.SecondPair = e2.EncounterID WHERE e1.GameID = ? OR e2.GameID = ?"; 
@@ -77,6 +83,8 @@ app.get("/pairs", (req, res, next) => {                 //gets data for all post
         }
     });
 });
+
+
 
 app.post("/games", (req, res, next) => {            //posts new game data to tblGames
     let strGameName = req.body.game_name;
@@ -106,6 +114,8 @@ app.post("/games", (req, res, next) => {            //posts new game data to tbl
         }
     });
 });
+
+
 
 app.post("/encounters", (req, res, next) => {           //posts new encounter data to tblEncounters
     let strGameID = req.body.game_id;
@@ -139,6 +149,8 @@ app.post("/encounters", (req, res, next) => {           //posts new encounter da
     });
 });
 
+
+
 app.post("/pairs", (req, res, next) => {                //posts new pair data to tblPairs
     let strFirstPair = req.body.first_pair;
     let strSecondPair = req.body.second_pair;
@@ -168,6 +180,8 @@ app.post("/pairs", (req, res, next) => {                //posts new pair data to
     });
 });
 
+
+
 app.delete("/games", (req, res, next) => {              //deletes game data from tblGames
     let strGameID = req.query.game_id; 
     let strCommand = "DELETE FROM tblGames WHERE GameID = ?"; 
@@ -195,32 +209,7 @@ app.delete("/games", (req, res, next) => {              //deletes game data from
     });
 });
 
-app.delete("/pairs", (req, res, next) => {              // deletes selected pair from tblPairs
-    let strPairID = req.query.pair_id; 
-    let strCommand = "DELETE FROM tblPairs WHERE PairID = ?"; 
 
-    ConNuzlocke.getConnection(function (err, connection) {
-        if (err) {
-            console.log(err); 
-            res.status(500).json({ status: "error", message: err }); 
-        } else {
-            ConNuzlocke.query(strCommand, [strPairID], function (err, result) {
-                if (err) {
-                    console.log(err); 
-                    res.status(500).json({ status: "error", message: err }); 
-                } else {
-                    if (result.affectedRows > 0) {
-                        res.status(200).json({
-                            status: "success", pair_id: strPairID, message: "Pair deleted successfully" });
-                    } else {
-                        res.status(404).json({
-                            status: "error", message: err });
-                    }
-                }
-            });
-        }
-    });
-});
 
 app.delete("/pairs", (req, res, next) => {              // deletes selected pair from tblPairs
     let strPairID = req.query.pair_id; 
@@ -248,6 +237,37 @@ app.delete("/pairs", (req, res, next) => {              // deletes selected pair
         }
     });
 });
+
+
+
+app.delete("/pairs", (req, res, next) => {              // deletes selected pair from tblPairs
+    let strPairID = req.query.pair_id; 
+    let strCommand = "DELETE FROM tblPairs WHERE PairID = ?"; 
+
+    ConNuzlocke.getConnection(function (err, connection) {
+        if (err) {
+            console.log(err); 
+            res.status(500).json({ status: "error", message: err }); 
+        } else {
+            ConNuzlocke.query(strCommand, [strPairID], function (err, result) {
+                if (err) {
+                    console.log(err); 
+                    res.status(500).json({ status: "error", message: err }); 
+                } else {
+                    if (result.affectedRows > 0) {
+                        res.status(200).json({
+                            status: "success", pair_id: strPairID, message: "Pair deleted successfully" });
+                    } else {
+                        res.status(404).json({
+                            status: "error", message: err });
+                    }
+                }
+            });
+        }
+    });
+});
+
+
 
 app.delete("/encounters", (req, res, next) => { // Deletes selected encounter from tblEncounters
     let strEncounterID = req.query.encounter_id; 
@@ -282,6 +302,8 @@ app.delete("/encounters", (req, res, next) => { // Deletes selected encounter fr
     });
 });
 
+
+
 app.get("/games/generation", (req, res, next) => {                    //gets generation for specified gameID
     let strGameID = req.query.game_id;
     
@@ -299,11 +321,67 @@ app.get("/games/generation", (req, res, next) => {                    //gets gen
                 } else {
                     if (result.length > 0) {
                         res.status(200).json({ 
-                            status: "success", 
-                            generation: result[0].Generation 
-                        });
+                            status: "success", generation: result[0].Generation });
                     } else {
                         res.status(404).json({ status: "error", message: "Game not found" });
+                    }
+                }
+            });
+        }
+    });
+});
+
+
+
+app.get("/encounters/game", (req, res, next) => {               //gets gameID for specified encounter
+    let strEncounterID = req.query.encounter_id;  
+
+    let strCommand = "SELECT GameID FROM tblEncounters WHERE EncounterID = ?";
+
+    ConNuzlocke.getConnection(function (err, connection) {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ status: "error", message: err });
+        } else {
+            connection.query(strCommand, [strEncounterID], function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ status: "error", message: err });
+                } else {
+                    if (result.length > 0) {
+                        res.status(200).json({ 
+                        status: "success", game_id: result[0].GameID });
+                    } else {
+                        res.status(404).json({ status: "error", message: "Encounter not found while trying to find gameID" });
+                    }
+                }
+            });
+        }
+    });
+});
+
+
+
+app.get("/encounters/type", (req, res, next) => {               //gets primaryType for specified encounter
+    let strEncounterID = req.query.encounter_id;  
+    
+    let strCommand = "SELECT PrimaryType FROM tblEncounters WHERE EncounterID = ?";
+
+    ConNuzlocke.getConnection(function (err, connection) {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ status: "error", message: err });
+        } else {
+            connection.query(strCommand, [strEncounterID], function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ status: "error", message: err });
+                } else {
+                    if (result.length > 0) {
+                        res.status(200).json({ 
+                            status: "success", primary_type: result[0].PrimaryType });
+                    } else {
+                        res.status(404).json({ status: "error", message: "Encounter not found while trying to find primaryType" });
                     }
                 }
             });
