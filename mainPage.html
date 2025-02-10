@@ -8,49 +8,50 @@
     <script src="mainPage.js" defer></script>
 </head>
 <body>
-    <h1>Create a new game</h1>
 
-    <form id="CreateGame">  
+    <button id="CreateGameButton">+</button>
 
-        </div>
+    <div id="CreateGameContainer" style="display: none;">
+        <form id="CreateGame">  
+            <h1>Create a new game</h1>
+    
             <label for="GameName">Game name:</label>
             <input type="text" id="GameName" placeholder="Pokemon Red" required><br>
-        <div>  
+    
+            <div>
+                <label for="generation">Select a generation:</label>
+                <select id="generation" name="version">
+                    <option value="I">I</option>
+                    <option value="II">II</option>
+                    <option value="III">III</option>
+                    <option value="IV">IV</option>
+                    <option value="V">V</option>
+                    <option value="VI">VI</option>
+                    <option value="VII">VII</option>
+                    <option value="VIII">VIII</option>
+                    <option value="IX">IX</option>  
+                    <option value="Rom hack">Rom hack</option>
+                </select>
+            </div>
+    
+            <div>   
+                <label for="challengeType">Challenge Type:</label>
 
-        <div>
-            <label for="generation">Select a generation:</label>
-            <select id="generation" name="version">
-                <option value="I">I</option>
-                <option value="II">II</option>
-                <option value="III">III</option>
-                <option value="IV">IV</option>
-                <option value="V">V</option>
-                <option value="VI">VI</option>
-                <option value="VII">VII</option>
-                <option value="VIII">VIII</option>
-                <option value="VIIII">VIIII</option>
-                <option value="Rom hack">Rom hack</option><br>
-            </select>
-        </div>
-
-        <div>   
-            <label for="challengeType">Challenge Type:</label>
-
-            <label>Soul Link</label>
-            <input type="radio" name="challengeType" value="Soul Link" checked>
-
-            <label>Nuzlocke</label>
-            <input type="radio" name="challengeType" value="Nuzlocke">
-        </div>
-
-        <div>
-            <label for="challengeNotes">Challenge Notes:</label>
-            <input type="text" id="challengeNotes" placeholder="Monotype, IronMon...">
-        </div>
-
-        <button type="submit">Create Game</button>
-
-    </form>
+                <label>Soul Link</label>
+                <input type="radio" name="challengeType" value="Soul Link" checked>
+                
+                <label>Nuzlocke</label>
+                <input type="radio" name="challengeType" value="Nuzlocke">
+            </div>
+    
+            <div>
+                <label for="challengeNotes">Challenge Notes:</label>
+                <input type="text" id="challengeNotes" placeholder="Monotype, IronMon...">
+            </div>
+    
+            <button type="submit">Create Game</button>
+        </form>
+    </div>
 
     <h1>Create a new encounter</h1>
 
