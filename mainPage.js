@@ -49,6 +49,7 @@ document.getElementById('CreateGame').addEventListener('submit', async (event) =
         if (response.ok) 
         {
             alert(`Game created successfully with ID: ${result.game_id}`);          //posts if successful
+            await fetchGames();         //refreshes game selection once a new game is created
         } 
 
         else 
