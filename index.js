@@ -390,6 +390,34 @@ app.get("/encounters/type", (req, res, next) => {               //gets primaryTy
 });
 
 
+
+app.get("/games/list", (req, res, next) => {                        //gets all game names 
+    let strCommand = "SELECT GameID, GameName FROM tblGames";
+
+    ConNuzlocke.getConnection(function (err, connection) {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ status: "error", message: err });
+        } else {
+            connection.query(strCommand, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ status: "error", message: err });
+                } else {
+                    if (result.length > 0) {
+                        res.status(200).json({ 
+                            status: "success", games: result });
+                    } else {
+                        res.status(404).json({ status: "error", message: "No games found" });
+                    }
+                }
+            });
+        }
+    });
+});
+
+
+
 app.listen(HTTP_PORT, () => {
     console.log(`Server is running on port ${HTTP_PORT}`);
 });
