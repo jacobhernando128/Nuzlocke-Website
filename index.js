@@ -418,6 +418,33 @@ app.get("/games/list", (req, res, next) => {                        //gets all g
 
 
 
+app.get("/games/encounters", (req, res, next) => {              
+    let strGameID = req.query.game_id;  
+    
+    let strCommand = "SELECT e.Encounter, e.PrimaryType AS Type, e.Caught, e.Alive, e.Location, COALESCE(pe.Encounter, 'None') AS PairedEncounter FROM tblEncounters e LEFT JOIN tblPairs p ON e.EncounterID = p.FirstPair LEFT JOIN tblEncounters pe ON p.SecondPair = pe.EncounterID WHERE e.GameID = ?";
+    ConNuzlocke.getConnection(function (err, connection) {
+        if (err) {
+            console.log(err);
+            res.status(500).json({ status: "error", message: err });
+        } else {
+            connection.query(strCommand, [strGameID], function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ status: "error", message: err });
+                } else {
+                    if (result.length > 0) {
+                        res.status(200).json({ 
+                            status: "success", encounters: result 
+                        });
+                    } else {
+                        res.status(404).json({ status: "error", message: "No encounters found for this game" });
+                    }
+                }
+            });
+        }
+    });
+});
+
 app.listen(HTTP_PORT, () => {
     console.log(`Server is running on port ${HTTP_PORT}`);
 });
