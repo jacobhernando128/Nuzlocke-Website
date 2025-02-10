@@ -347,3 +347,153 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         alert("Cannot create pair from different games")            //alerts if encounters exist in different games
     }
 });
+
+
+
+document.addEventListener("DOMContentLoaded", function ()               //displays encounters and pairs for selected game
+{
+    const gameSelect = document.getElementById("gameSelect");
+    const encounterList = document.getElementById("encounterList");             //initializes input from game select and the encounter display
+    let abortController = new AbortController(); 
+    let latestRequestID = 0;                                                    //deals with different requests to display game data
+
+    gameSelect.selectedIndex = 0;               //sets selection to default
+
+    async function fetchGames() 
+    {
+        try 
+        {
+            const response = await fetch("http://localhost:8000/games/list",            //fetches list of game names and their IDs
+            {
+                method: "GET",
+                headers: 
+                {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await response.json();
+            if (data.status === "success") 
+            {
+                gameSelect.innerHTML = '<option value="">Select a game</option>';       //if successful, clears previous options and appends all game values for selection
+                data.games.forEach(game => 
+                {
+                    let option = document.createElement("option");
+                    option.value = game.GameID;
+                    option.textContent = game.GameName;
+                    gameSelect.appendChild(option);
+                });
+            } 
+            else 
+            {
+                console.error("Failed to fetch games:", data.message);          //error if pulled data is not successful
+            }
+        } catch (error) 
+        {
+            console.error("Error fetching games:", error);                  //error if fetch does not work
+            alert("Failed to retrieve games. Please try again later.");
+        }
+    }
+
+    async function fetchEncounters(gameID) 
+    {
+        latestRequestID++;  // Increment request counter
+        const requestID = latestRequestID; // Store unique ID for this request
+
+        if (abortController) 
+        {
+            abortController.abort();            //aborts previous request
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 50));  // Small delay to stabilize UI updates
+        abortController = new AbortController();                // Create a new abort controller AFTER aborting the previous one
+        const { signal } = abortController; 
+
+        try 
+        {
+            const response = await fetch(`http://localhost:8000/games/encounters?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
+            {
+                method: "GET",
+                headers: 
+                {
+                    "Content-Type": "application/json"
+                },
+                signal 
+            });
+
+            if (!response.ok) 
+            {
+                throw new Error(`HTTP error! Status: ${response.status}`);              //error if it cannot fetch
+            }
+
+            const data = await response.json();
+
+            if (requestID !== latestRequestID)              // ensures current request is still the latest one before updating the UI
+            {
+                console.log("Outdated request ignored:", requestID);
+                return; 
+            }
+
+            encounterList.innerHTML = ""; // Clear previous results
+
+            if (data.status === "success") 
+            {
+                const encounterMap = new Map();
+    
+                data.encounters.forEach(encounter =>            //maps encounters if data is successfully pulled
+                {
+                    encounterMap.set(encounter.Encounter, 
+                    {
+                        name: encounter.Encounter,
+                        type: encounter.Type,
+                        pairedWith: encounter.PairedEncounter || null           //if pair doesn't exist, set null
+                    });
+                });
+    
+                encounterMap.forEach(encounter => 
+                {
+                    if (encounter.pairedWith && encounterMap.has(encounter.pairedWith))             //ensures pairs are properly assigned
+                    {
+                        encounterMap.get(encounter.pairedWith).pairedWith = encounter.name; 
+                    }
+                });
+    
+                encounterMap.forEach(encounter =>               //appends all encounters and their pairs for specefied game
+                {
+                    let listItem = document.createElement("li");
+                    listItem.textContent = `Encounter: ${encounter.name} (Type: ${encounter.type}) - Paired with: ${encounter.pairedWith || "None"}`;
+                    encounterList.appendChild(listItem);
+                });
+            } 
+            else  
+            {
+                console.log("No encounters found for this game.");
+                encounterList.innerHTML = "<li>No encounters found.</li>";      //displays message if no encounters are found
+            }
+        } catch (error) 
+        {
+            if (error.name === "AbortError") 
+            {
+                console.log("Previous request was aborted due to a new selection.");            //error for request handling
+                return; 
+            } 
+
+            console.error("Error fetching encounters:", error);
+            encounterList.innerHTML = "<li>Failed to load encounters. Try again.</li>";         //error for encounters not loading
+        }
+    }
+
+    gameSelect.addEventListener("change", function () 
+    {
+        if (this.value) 
+        {
+            fetchEncounters(this.value);        //changes value for selected game
+        }
+        else 
+        {
+            encounterList.innerHTML = ""; // Clear the list if no game is selected
+        }
+    });
+
+    fetchGames();
+});
