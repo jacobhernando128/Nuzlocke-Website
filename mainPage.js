@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", async() =>
             let typeTemp;
             if (generation == "I" || generation == "II" || generation == "III" || generation == "IV" || generation == "V" )
             {
-                typeTemp = selectedPokemon["type pre-fairy"] || selectedPokemon.primaryType;        //assigns type pre fairy if it exists, if not uses primary type for game generations 1-5
+                typeTemp = selectedPokemon["type pre-fairy"] || selectedPokemon.primary_type;        //assigns type pre fairy if it exists, if not uses primary type for game generations 1-5
             }
             else                                                        
             {
