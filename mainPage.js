@@ -283,42 +283,50 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
     console.log(firstPairGame);
     console.log(secondPairGame);
 
-    if ((firstPairGame == secondPairGame) && (firstPairType != secondPairType))         
+    if (firstPairGame == secondPairGame)         
     {
-        try     
+        if (firstPairType != secondPairType)
         {
-            const response = await fetch("http://localhost:8000/pairs", 
+            try     
             {
-                method: "POST",
-                headers: 
+                const response = await fetch("http://localhost:8000/pairs", 
                 {
-                    "Content-Type": "application/json",                     //prepares post for game by JSON
-                },
-                body: JSON.stringify(gameData),
-            });
-        
-            const result = await response.json();
-        
-            if (response.ok) 
+                    method: "POST",
+                    headers: 
+                    {
+                        "Content-Type": "application/json",                     //prepares post for game by JSON
+                    },
+                    body: JSON.stringify(gameData),
+                });
+            
+                const result = await response.json();
+            
+                if (response.ok) 
+                {
+                    alert(`Pair created successfully with ID: ${result.pair_id}`);          //posts if successful
+                } 
+            
+                else 
+                {
+                    console.error(result.message);                  //error if unsuccessful post
+                    alert(`Error: ${result.message}`);
+                }
+            
+            } catch (error) 
             {
-                alert(`Pair created successfully with ID: ${result.pair_id}`);          //posts if successful
-            } 
-        
-            else 
-            {
-                console.error(result.message);                  //error if unsuccessful post
-                alert(`Error: ${result.message}`);
+                console.error("Error submitting form:", error);                 //error if form submission occurs
+                alert("Failed to create the pair. Please try again later.");
             }
-        
-        } catch (error) 
+        }
+
+        else
         {
-            console.error("Error submitting form:", error);                 //error if form submission occurs
-            alert("Failed to create the pair. Please try again later.");
+            alert("Cannot create pair that has the same primary type")          //alerts if both pairs have the same type
         }
     }
     
     else
     {
-        alert("Cannot create pair that has the same primary type")
+        alert("Cannot create pair from different games")            //alerts if encounters exist in different games
     }
 });
