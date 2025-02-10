@@ -1,3 +1,20 @@
+document.getElementById("CreateGameButton").addEventListener("click", function () 
+{
+    const CreateGameForm = document.getElementById("CreateGameContainer");
+
+    if (CreateGameForm.style.display === "none" || CreateGameForm.style.display === "") 
+    {
+        CreateGameForm.style.display = "block"; 
+        this.textContent = "−"; 
+    } 
+    
+    else 
+    {
+        CreateGameForm.style.display = "none"; 
+        this.textContent = "+"; 
+    }
+});
+
 document.getElementById('CreateGame').addEventListener('submit', async (event) => 
 {
     event.preventDefault();         //prevents frontend from running before backend is done
