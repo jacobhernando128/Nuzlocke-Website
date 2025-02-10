@@ -354,7 +354,8 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
 document.addEventListener("DOMContentLoaded", function ()               //displays encounters and pairs for selected game
 {
     const gameSelect = document.getElementById("gameSelect");
-    const encounterList = document.getElementById("encounterList");             //initializes input from game select and the encounter display
+    const encounterList = document.getElementById("encounterList");             //initializes input from game select and the encounter displays
+    const deadEncounterList = document.getElementById("deadEncounterList");
     let abortController = new AbortController(); 
     let latestRequestID = 0;                                                    //deals with different requests to display game data
 
@@ -436,21 +437,26 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
             }
 
             encounterList.innerHTML = ""; // Clear previous results
+            deadEncounterList.innerHTML = ""; // Clear dead encounters list
 
             if (data.status === "success") 
             {
                 const encounterMap = new Map();
-    
+                let isNuzlocke = data.game_type.toLowerCase() === "nuzlocke";   // Checks if the game type is a Nuzlocke
+
                 data.encounters.forEach(encounter =>            //maps encounters if data is successfully pulled
                 {
                     encounterMap.set(encounter.Encounter, 
                     {
                         name: encounter.Encounter,
                         type: encounter.Type,
-                        pairedWith: encounter.PairedEncounter || null           //if pair doesn't exist, set null
+                        pairedWith: isNuzlocke ? null : encounter.PairedEncounter || null,           //if Nuzlocke, set pair to null
+                        caught: encounter.Caught ? "Yes" : "No",                 //converts boolean values to yes and no 
+                        alive: encounter.Alive ? "Yes" : "No",                   
+                        location: encounter.Location || "Unknown"                //displays "Unknown" if location is missing
                     });
                 });
-    
+
                 encounterMap.forEach(encounter => 
                 {
                     if (encounter.pairedWith && encounterMap.has(encounter.pairedWith))             //ensures pairs are properly assigned
@@ -458,20 +464,34 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
                         encounterMap.get(encounter.pairedWith).pairedWith = encounter.name; 
                     }
                 });
-    
-                encounterMap.forEach(encounter =>               //appends all encounters and their pairs for specefied game
+
+                encounterMap.forEach(encounter =>               
                 {
                     let listItem = document.createElement("li");
-                    listItem.textContent = `Encounter: ${encounter.name} (Type: ${encounter.type}) - Paired with: ${encounter.pairedWith || "None"}`;
-                    encounterList.appendChild(listItem);
+                    listItem.textContent = 
+                    `Encounter: ${encounter.name} (Type: ${encounter.type}) ` + 
+                    (isNuzlocke ? "" : `- Paired with: ${encounter.pairedWith || "None"}`) +  // Hide pair info if Nuzlocke
+                    ` | Caught: ${encounter.caught} | Alive: ${encounter.alive} | ` +
+                    `Location: ${encounter.location}`;
+
+                    if (encounter.alive === "Yes") 
+                    {
+                        encounterList.appendChild(listItem); // Add to main list if alive
+                    } 
+                    else 
+                    {
+                        deadEncounterList.appendChild(listItem); // Add to dead encounters list if not alive
+                    }
                 });
             } 
             else  
             {
                 console.log("No encounters found for this game.");
                 encounterList.innerHTML = "<li>No encounters found.</li>";      //displays message if no encounters are found
+                deadEncounterList.innerHTML = ""; // Clears dead encounters list
             }
-        } catch (error) 
+        } 
+        catch (error) 
         {
             if (error.name === "AbortError") 
             {
@@ -481,6 +501,7 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
 
             console.error("Error fetching encounters:", error);
             encounterList.innerHTML = "<li>Failed to load encounters. Try again.</li>";         //error for encounters not loading
+            deadEncounterList.innerHTML = ""; // Clears dead encounters list in case of error
         }
     }
 
@@ -493,6 +514,7 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
         else 
         {
             encounterList.innerHTML = ""; // Clear the list if no game is selected
+            deadEncounterList.innerHTML = ""; // Clear the dead encounters list if no game is selected
         }
     });
 
