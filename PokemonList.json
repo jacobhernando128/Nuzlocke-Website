@@ -79,7 +79,7 @@
         { "name": "Poliwrath", "primary_type": "Water", "generation": "I" },
         { "name": "Abra", "primary_type": "Psychic", "generation": "I" },
         { "name": "Kadabra", "primary_type": "Psychic", "generation": "I" },
-        { "name": "Alazkazam", "primary_type": "Psychic", "generation": "I" },
+        { "name": "Alakazam", "primary_type": "Psychic", "generation": "I" },
         { "name": "Machop", "primary_type": "Fighting", "generation": "I" },
         { "name": "Machoke", "primary_type": "Fighting", "generation": "I" },
         { "name": "Machamp", "primary_type": "Fighting", "generation": "I" },
