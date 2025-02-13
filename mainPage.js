@@ -78,7 +78,8 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
                     <p><strong>Nickname:</strong> ${encounter.Nickname}</p>
                 `;
 
-                encounterBox.addEventListener("click", () => {
+                encounterBox.addEventListener("click", () => 
+                {
                     alert(`You selected ${encounter.Encounter} from ${encounter.Location}`);                //interacts on click
                 });
         
@@ -96,6 +97,12 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
                 } 
                 else 
                 {
+                    let deadEncounterBox = document.createElement("div");
+                    deadEncounterBox.className = "dead-encounter-box";
+                    deadEncounterBox.innerHTML = `
+                        <h3>${encounter.Encounter}</h3>
+                        <p><strong>Location:</strong> ${encounter.Location}</p>
+                    `;
                     deadEncounterList.appendChild(encounterBox);                    // adds to dead encounters list if not 
                 }
             });
