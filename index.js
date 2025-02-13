@@ -185,7 +185,7 @@ app.post("/encounters", (req, res, next) => // Posts new encounter data to tblEn
         } 
         else 
         {
-            connection.query(strCommand, [strGameID, strEncounter, strPrimaryType, strCaught, strAlive, strLocation, strTrainer, strNickname, strTrainerInput], (err, result) => 
+            connection.query(strCommand, [strGameID, strEncounter, strPrimaryType, strCaught, strAlive, strLocation, strNickname, strTrainerInput], (err, result) => 
             {  
                 connection.release();
 
