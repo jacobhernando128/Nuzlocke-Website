@@ -2,12 +2,15 @@ let trainer1List;
 let trainer2List;
 let pairsList;
 let deadEncounterList;       //declares encounter and dead encounters globally for updating purposes
+let encountersDropdown;
 
 async function fetchEncounters(gameID)          //updates the encounters list for the specified game
 {
     trainer1List = document.getElementById("trainer1List");             //initializes lists for display
     trainer2List = document.getElementById("trainer2List")
     deadEncounterList = document.getElementById("deadEncounterList");
+    encountersDropdown = document.getElementById("encountersDropdown");           //references the dropdown container
+    encountersDropdown.innerHTML = "";
     let trainer1Name;
     let trainer2Name;
 
@@ -49,6 +52,9 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
             const trainerData = await response.json();                  
             trainer1Name = trainerData.trainers.Trainer1;               //assigns values for trainer names
             trainer2Name = trainerData.trainers.Trainer2;
+
+            document.querySelector("#trainer1Table h2").textContent = `${trainer1Name}'s Encounters`;
+            document.querySelector("#trainer2Table h2").textContent = `${trainer2Name}'s Encounters`;
 
         } catch (error) 
         {
@@ -105,6 +111,12 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
                     `;
                     deadEncounterList.appendChild(encounterBox);                    // adds to dead encounters list if not 
                 }
+
+                let encounterItem = document.createElement("p");
+                encounterItem.textContent = encounter.Encounter;
+                encounterItem.className = "dropdown-item";
+
+                encountersDropdown.appendChild(encounterItem);
             });
         } 
         else 
@@ -676,6 +688,7 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
             trainer2List.innerHTML = "";
             pairsList.innerHTML = "";
             deadEncounterList.innerHTML = ""; 
+            encountersDropdown.innterHTML = "";
         }
     });
 
