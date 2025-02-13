@@ -1,4 +1,3 @@
-document.getElementById("CreateGameButton").addEventListener("click", function () 
 let encounterList;
 let pairsList;
 let deadEncounterList;       //declares encounter and dead encounters globally for updating purposes
@@ -195,6 +194,8 @@ async function updateLists(gameID)  //refreshes lists after any updates to the d
         alert("Failed to fetch ChallengeType for gameID. Please try again later.");
     }
 }
+
+document.getElementById("CreateGameButton").addEventListener("click", function ()           //toggles CreateGame area visibility
 {
     const CreateGameForm = document.getElementById("CreateGameContainer");
 
@@ -211,7 +212,9 @@ async function updateLists(gameID)  //refreshes lists after any updates to the d
     }
 });
 
-document.getElementById('CreateGame').addEventListener('submit', async (event) => 
+
+
+document.getElementById('CreateGame').addEventListener('submit', async (event) =>           //creates game and posts to database
 {
     event.preventDefault();         //prevents frontend from running before backend is done
 
@@ -263,7 +266,7 @@ document.getElementById('CreateGame').addEventListener('submit', async (event) =
 
 
 
-document.addEventListener("DOMContentLoaded", async() =>
+document.addEventListener("DOMContentLoaded", async() =>            //autofills encounter input and posts encounter to database
 {
     
     const pokemonInput = document.getElementById("encounterInput");
@@ -367,11 +370,12 @@ document.addEventListener("DOMContentLoaded", async() =>
 
                 if (response.ok) 
                 {
-                alert(`Encounter created successfully with ID: ${result.encounter_id}`);         //posts if successful
+                    alert(`Encounter created successfully with ID: ${result.encounter_id}`);         //posts if successful
+                    await updateLists(gameID);
                 } 
 
                 else 
-                {
+                {o
                     console.error(result.message);                          //error if unsuccessful post
                     alert(`Error: ${result.message}`);
                 }
@@ -392,7 +396,7 @@ document.addEventListener("DOMContentLoaded", async() =>
 
 
 
-document.getElementById('CreatePair').addEventListener('submit', async (event) => 
+document.getElementById('CreatePair').addEventListener('submit', async (event) =>       //creates pair and posts to backend
 {
     event.preventDefault();         //prevents frontend from running before backend is done
 
@@ -492,11 +496,6 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         alert("Failed to retrieve primary type. Please try again later.");
     }
     
-    console.log(firstPairType);
-    console.log(secondPairType);                //tester functions
-    console.log(firstPairGame);
-    console.log(secondPairGame);
-
     if (firstPairGame == secondPairGame)         
     {
         if (firstPairType != secondPairType)
@@ -518,6 +517,7 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
                 if (response.ok) 
                 {
                     alert(`Pair created successfully with ID: ${result.pair_id}`);          //posts if successful
+                    await updateLists(firstPairGame);
                 } 
             
                 else 
@@ -550,10 +550,8 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
 document.addEventListener("DOMContentLoaded", function ()               //displays encounters and pairs for selected game
 {
     const gameSelect = document.getElementById("gameSelect");
-    const encounterList = document.getElementById("encounterList");             //initializes input from game select and the encounter displays
-    const deadEncounterList = document.getElementById("deadEncounterList");
-    let abortController = new AbortController(); 
-    let latestRequestID = 0;                                                    //deals with different requests to display game data
+    encounterList = document.getElementById("encounterList");             //initializes input from game select and the encounter displays
+    deadEncounterList = document.getElementById("deadEncounterList");                                                 
 
     gameSelect.selectedIndex = 0;               //sets selection to default
 
@@ -593,119 +591,12 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
         }
     }
 
-    async function fetchEncounters(gameID) 
-    {
-        latestRequestID++;  // Increment request counter
-        const requestID = latestRequestID; // Store unique ID for this request
-
-        if (abortController) 
-        {
-            abortController.abort();            //aborts previous request
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 50));  // Small delay to stabilize UI updates
-        abortController = new AbortController();                // Create a new abort controller AFTER aborting the previous one
-        const { signal } = abortController; 
-
-        try 
-        {
-            const response = await fetch(`http://localhost:8000/games/encounters?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
-            {
-                method: "GET",
-                headers: 
-                {
-                    "Content-Type": "application/json"
-                },
-                signal 
-            });
-
-            if (!response.ok) 
-            {
-                throw new Error(`HTTP error! Status: ${response.status}`);              //error if it cannot fetch
-            }
-
-            const data = await response.json();
-
-            if (requestID !== latestRequestID)              // ensures current request is still the latest one before updating the UI
-            {
-                console.log("Outdated request ignored:", requestID);
-                return; 
-            }
-
-            encounterList.innerHTML = ""; // Clear previous results
-            deadEncounterList.innerHTML = ""; // Clear dead encounters list
-
-            if (data.status === "success") 
-            {
-                const encounterMap = new Map();
-                let isNuzlocke = data.game_type.toLowerCase() === "nuzlocke";   // Checks if the game type is a Nuzlocke
-
-                data.encounters.forEach(encounter =>            //maps encounters if data is successfully pulled
-                {
-                    encounterMap.set(encounter.Encounter, 
-                    {
-                        name: encounter.Encounter,
-                        type: encounter.Type,
-                        pairedWith: isNuzlocke ? null : encounter.PairedEncounter || null,           //if Nuzlocke, set pair to null
-                        caught: encounter.Caught ? "Yes" : "No",                 //converts boolean values to yes and no 
-                        alive: encounter.Alive ? "Yes" : "No",                   
-                        location: encounter.Location || "Unknown"                //displays "Unknown" if location is missing
-                    });
-                });
-
-                encounterMap.forEach(encounter => 
-                {
-                    if (encounter.pairedWith && encounterMap.has(encounter.pairedWith))             //ensures pairs are properly assigned
-                    {
-                        encounterMap.get(encounter.pairedWith).pairedWith = encounter.name; 
-                    }
-                });
-
-                encounterMap.forEach(encounter =>               
-                {
-                    let listItem = document.createElement("li");
-                    listItem.textContent = 
-                    `Encounter: ${encounter.name} (Type: ${encounter.type}) ` + 
-                    (isNuzlocke ? "" : `- Paired with: ${encounter.pairedWith || "None"}`) +  // Hide pair info if Nuzlocke
-                    ` | Caught: ${encounter.caught} | Alive: ${encounter.alive} | ` +
-                    `Location: ${encounter.location}`;
-
-                    if (encounter.alive === "Yes") 
-                    {
-                        encounterList.appendChild(listItem); // Add to main list if alive
-                    } 
-                    else 
-                    {
-                        deadEncounterList.appendChild(listItem); // Add to dead encounters list if not alive
-                    }
-                });
-            } 
-            else  
-            {
-                console.log("No encounters found for this game.");
-                encounterList.innerHTML = "<li>No encounters found.</li>";      //displays message if no encounters are found
-                deadEncounterList.innerHTML = ""; // Clears dead encounters list
-            }
-        } 
-        catch (error) 
-        {
-            if (error.name === "AbortError") 
-            {
-                console.log("Previous request was aborted due to a new selection.");            //error for request handling
-                return; 
-            } 
-
-            console.error("Error fetching encounters:", error);
-            encounterList.innerHTML = "<li>Failed to load encounters. Try again.</li>";         //error for encounters not loading
-            deadEncounterList.innerHTML = ""; // Clears dead encounters list in case of error
-        }
-    }
-
+    
     gameSelect.addEventListener("change", function () 
     {
         if (this.value) 
         {
-            fetchEncounters(this.value);        //changes value for selected game
+            updateLists(this.value);        //changes value for selected game
         }
         else 
         {
