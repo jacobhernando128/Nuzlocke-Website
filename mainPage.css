@@ -214,54 +214,79 @@ body
 
 
 /* Styles the left panel for encounters */
+/* Styles the left panel for Trainer1 encounters */
 #trainer1Table {
     width: 33%;
     position: fixed;
     left: 0;
-    top: 50px;
+    top: 100px;
     bottom: 0;
     background: #f8f8f8;
     overflow-y: auto;
-    padding: 10px;
+    padding: 15px;
     border-right: 2px solid #ccc;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Styles the middle panel for Trainer2 encounters */
 #trainer2Table {
-    width: 33%;
+    width: 32%;
     position: fixed;
-    left: 33%;
-    top: 50px;
+    left: 34%;
+    top: 100px;
     bottom: 0;
     background: #eef7ff;
     overflow-y: auto;
-    padding: 10px;
+    padding: 15px;
     border-right: 2px solid #bbb;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Styles encounter boxes */
-.encounter-box {
-    background: white;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.3s ease;
-    margin-bottom: 8px;
+/* Styles the right panel for pairs */
+#rightSection {
+    width: 33%;
+    position: fixed;
+    left: 67%;
+    top: 100px;
+    bottom: 0;
+    background: #eef7ff;
+    overflow-y: auto;
+    padding: 15px;
+    border-left: 2px solid #ccc;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.encounter-box:hover {
-    transform: scale(1.05);
-    background: #e0f7fa;
-}
-
-.encounter-box h3 {
+/* General Styling for a Cleaner Look */
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
-    color: #333;
+    padding: 0;
+    background: #f4f4f4;
 }
 
-.encounter-box p {
-    margin: 5px 0;
-    font-size: 14px;
-    color: #555;
+/* Encounter and Pair Box Styling */
+.encounter-box, .pair-box {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
 }
+
+.encounter-box:hover, .pair-box:hover {
+    transform: scale(1.03);
+    background: #e0f2ff;
+}
+
+/* Headings for Each Section */
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #bbb;
+    margin-bottom: 10px;
+}
+
