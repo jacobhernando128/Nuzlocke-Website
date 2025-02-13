@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Nuzlocke Website</title>
     <title>Main Page</title>
     <script src="mainPage.js" defer></script>
-</head>
+    <link rel="stylesheet" href="mainPage.css">
 <body>
 
     <button id="CreateGameButton">+</button>
@@ -53,7 +53,6 @@
         </form>
     </div>
 
-    <label for="gameSelect">Select Game:</label>
     <select id="gameSelect">
         <option value="" disabled selected>Select a game</option>
     </select>
@@ -66,6 +65,47 @@
 
     <h2>Fainted Pokémon</h2>    
     <ul id="deadEncounterList"></ul>    
+
+    <button id="infoButton">ℹ️</button>
+
+    <div id="infoModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Welcome to the Nuzlocke Website! This is a tool that can be used to keep track of your nuzlocke and soul link playthroughs</p>
+        </div>
+    </div>
+
+    <button id="encountersButton">Encounters ▼</button>
+    <div id="encountersDropdown" class="dropdown-content">
+        <p>Encounter 1</p>
+        <p>Encounter 2</p>
+        <p>Encounter 3</p>
+    </div>
+
+    <button id="statusButton">Status</button>
+    <div id="statusModal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Your current status: <span id="statusText">Active</span></p>
+            <button id="changeStatusButton">Change Status</button>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <h1>Create a new encounter</h1>
 
