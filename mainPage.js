@@ -56,6 +56,111 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
     }
 }
 
+async function fetchPairs(gameID) 
+{
+    let firstPairAlive;
+    let firstPairName;                              //defines variables for later use
+    let secondPairAlive; 
+    let secondPairName;
+    pairsList = document.getElementById("pairsList");               //links to the pairsList HTML
+
+    try 
+    {
+        const response = await fetch(`http://localhost:8000/pairs?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
+        {
+            method: "GET",
+            headers: 
+            {
+                "Content-Type": "application/json"
+            },
+        });
+
+        if(!response.ok)
+        {
+            throw new Error(`HTTP error! Status: ${response.status}`);              //error if it cannot fetch
+        }
+
+        const data = await response.json();
+        console.log("Fetched Pairs:", data);
+
+        pairsList.innerHTML = ""            //clears lists before posting new encounters
+
+        if (data.status === "success" && Array.isArray(data.pairs) && data.pairs.length > 0)            //if the data is correctly defined and contains encounters
+        {
+            for (const pair of data.pairs)          //runs for each pair in data
+            {
+                try 
+                {
+                    const response = await fetch(`http://localhost:8000/encounter/alive?encounter_id=${pair.FirstPair}`,            //fetches encounters and pairs for specefied game
+                    {
+                        method: "GET",
+                        headers: 
+                        {
+                            "Content-Type": "application/json"
+                        },
+                    });
+        
+                    if(!response.ok)
+                    {
+                        throw new Error(`HTTP error! Status: ${response.status}`);              //error if it cannot fetch
+                    }
+        
+                    const firstPairData = await response.json();
+                    firstPairAlive = firstPairData.alive;                   //assigns values for first pair's name and alive status
+                    firstPairName = firstPairData.encounter_name;
+        
+                } catch (error) 
+                {
+                    console.error("Error fetching first pair's alive value:", error);                 //error if form submission occurs
+                    alert("Failed to fetch first pair's alive value. Please try again later.");
+                }
+                
+                try 
+                {
+                    const response = await fetch(`http://localhost:8000/encounter/alive?encounter_id=${pair.SecondPair}`,            //fetches encounters and pairs for specefied game
+                    {
+                        method: "GET",
+                        headers: 
+                        {
+                            "Content-Type": "application/json"
+                        },
+                    });
+        
+                    if(!response.ok)
+                    {
+                        throw new Error(`HTTP error! Status: ${response.status}`);              //error if it cannot fetch
+                    }
+        
+                    const secondPairData = await response.json();           //assigns values for second pair's name and alive status
+                    secondPairAlive = secondPairData.alive;
+                    secondPairName = secondPairData.encounter_name;
+        
+                } catch (error) 
+                {
+                    console.error("Error fetching second pair's alive value:", error);                 //error if form submission occurs
+                    alert("Failed to fetch second pair's alive value. Please try again later.");
+                }
+        
+                let listItem = document.createElement("li");                        //formats input for pairs
+                listItem.textContent = `First encounter: ${firstPairName} | Second encounter: ${secondPairName} | ` + `Rostered: ${pair.Rostered ? "Yes" : "No"}`;
+        
+                if (firstPairAlive == 1 && secondPairAlive == 1) 
+                {
+                    pairsList.appendChild(listItem);  // Adds to pair list if both encounters are alive
+                } 
+                else 
+                {
+                    pairsList.appendChild(listItem);  // Adds to dead pairs list if not 
+                }
+            };
+        } 
+    } catch
+    {
+        console.error("Error updating pair list:", error);                 //error if form submission occurs
+        alert("Failed to update pair list. Please try again later.");
+    }
+}
+
 {
     const CreateGameForm = document.getElementById("CreateGameContainer");
 
