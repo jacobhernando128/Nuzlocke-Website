@@ -644,6 +644,96 @@ app.get("/game/challenge-type", (req, res, next) => {
 
 
 
+app.put("/games/update-trainer1", (req, res, next) => // updates Trainer1 name from specified GameID
+{
+    const { gameID, trainer1 } = req.body; 
+
+    if (!gameID || !trainer1) 
+    {
+        return res.status(400).json({ status: "error", message: "Missing gameID or trainer2" });
+    }
+
+    let strCommand = "UPDATE tblGames SET Trainer1 = ? WHERE GameID = ?";
+
+    ConNuzlocke.getConnection((err, connection) => 
+    {
+        if (err) 
+        {
+            console.error("Database Connection Error:", err);
+            return res.status(500).json({ status: "error", message: "Database connection failed" });
+        }
+
+        connection.query(strCommand, [trainer1, gameID], (err, result) => 
+        {
+            connection.release(); 
+
+            if (err) 
+            {
+                console.error("Query Error:", err);
+                return res.status(500).json({ status: "error", message: "Query execution failed" });
+            }
+
+            if (result.affectedRows > 0) 
+            {
+                return res.status(200).json({ 
+                    status: "success", message: `Trainer1 updated for GameID ${gameID}` 
+                });
+            } 
+            else 
+            {
+                return res.status(404).json({ status: "error", message: "Game not found or no changes made" });
+            }
+        });
+    });
+});
+
+
+
+app.put("/games/update-trainer2", (req, res, next) => // updates Trainer2 name from specified GameID
+{
+    const { gameID, trainer2 } = req.body; 
+
+    if (!gameID || !trainer2) 
+    {
+        return res.status(400).json({ status: "error", message: "Missing gameID or trainer2" });
+    }
+
+    let strCommand = "UPDATE tblGames SET Trainer2 = ? WHERE GameID = ?";
+
+    ConNuzlocke.getConnection((err, connection) => 
+    {
+        if (err) 
+        {
+            console.error("Database Connection Error:", err);
+            return res.status(500).json({ status: "error", message: "Database connection failed" });
+        }
+
+        connection.query(strCommand, [trainer2, gameID], (err, result) => 
+        {
+            connection.release(); 
+
+            if (err) 
+            {
+                console.error("Query Error:", err);
+                return res.status(500).json({ status: "error", message: "Query execution failed" });
+            }
+
+            if (result.affectedRows > 0) 
+            {
+                return res.status(200).json({ 
+                    status: "success", message: `Trainer2 updated for GameID ${gameID}` 
+                });
+            } 
+            else 
+            {
+                return res.status(404).json({ status: "error", message: "Game not found or no changes made" });
+            }
+        });
+    });
+});
+
+
+
 app.listen(HTTP_PORT, () => {
     console.log(`Server is running on port ${HTTP_PORT}`);
 });
