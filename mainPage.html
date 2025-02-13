@@ -9,12 +9,14 @@
     <link rel="stylesheet" href="mainPage.css">
 <body>
 
-    <button id="CreateGameButton">+</button>
+<button id="CreateGameButton">+</button>
 
-    <div id="CreateGameContainer" style="display: none;">
-        <form id="CreateGame">  
+<div id="CreateGameContainer" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
             <h1>Create a new game</h1>
-    
+        
+        <form id="CreateGame">  
             <label for="GameName">Game name:</label>
             <input type="text" id="GameName" placeholder="Pokemon Red" required><br>
     
@@ -44,25 +46,26 @@
                 <input type="radio" name="challengeType" value="Nuzlocke">
             </div>
     
-            <div>
-                <label for="challengeNotes">Challenge Notes:</label>
-                <input type="text" id="challengeNotes" placeholder="Monotype, IronMon...">
-            </div>
 
-            <div>
-                <label for="trainer1">Trainer 1:</label>
-                <input type="text" id="trainer1EncountersList" placeholder="Johhny Mac Brentlinger">
-            </div>
+            <label for="challengeNotes">Challenge Notes:</label>
+            <input type="text" id="challengeNotes" placeholder="Monotype, IronMon...">
 
-            <div>
-                <label for="trainer2">Trainer 2:</label>
-                <input type="text" id="trainer2EncounterList" placeholder="Joesph Borr">
-            </div>
+
+            <label for="trainer1">Trainer 1:</label>
+            <input type="text" id="trainer1EncountersList" placeholder="Johhny Mac Brentlinger">
+
+
+            <label for="trainer2">Trainer 2:</label>
+            <input type="text" id="trainer2EncounterList" placeholder="Joseph Borr">
+
     
-            <button type="submit">Create Game</button>
+            <div class="button-group">
+                <button type="submit">Create Game</button>
+                <button type="button" id="cancelCreateGame">Cancel</button>
+            </div>
         </form>
     </div>
-
+</div>
     <select id="gameSelect">
         <option value="" disabled selected>Select a game</option>
     </select>
