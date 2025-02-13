@@ -1,4 +1,3 @@
-let encounterList;
 let trainer1List;
 let trainer2List;
 let pairsList;
@@ -264,23 +263,6 @@ async function updateLists(gameID)  //refreshes lists after any updates to the d
     }
 }
 
-document.getElementById("CreateGameButton").addEventListener("click", function ()           //toggles CreateGame area visibility
-{
-    const CreateGameForm = document.getElementById("CreateGameContainer");
-
-    if (CreateGameForm.style.display === "none" || CreateGameForm.style.display === "") 
-    {
-        CreateGameForm.style.display = "block"; 
-        this.textContent = "−"; 
-    } 
-    
-    else 
-    {
-        CreateGameForm.style.display = "none"; 
-        this.textContent = "+"; 
-    }
-});
-
 
 
 document.getElementById('CreateGame').addEventListener('submit', async (event) =>           //creates game and posts to database
@@ -291,6 +273,8 @@ document.getElementById('CreateGame').addEventListener('submit', async (event) =
     const generation = document.getElementById("generation").value;
     const challengeType = document.querySelector('input[name="challengeType"]:checked').value;              //initializes variables from HTML user input
     const challengeNotes = document.getElementById("challengeNotes").value;
+    const trainer1 = document.getElementById("trainer1").value;
+    const trainer2 = document.getElementById("trainer2").value;
 
     const gameData =                   //creates a payload of the game data
     {
@@ -298,6 +282,8 @@ document.getElementById('CreateGame').addEventListener('submit', async (event) =
         generation: generation,
         challenge_type: challengeType,
         challenge_notes: challengeNotes,
+        trainer1: trainer1,
+        trainer2: trainer2
     };
 
     try     
@@ -412,6 +398,8 @@ document.addEventListener("DOMContentLoaded", async() =>            //autofills 
             const aliveValue = isCaught ? 1 : 0;
     
             const locationValue = document.getElementById("locationInput").value;
+            const nicknameValue = document.getElementById("nicknameInput").value;
+            const trainerValue = document.getElementById("trainerNameInput").value;
 
             const encounterData =                   //creates a payload of the encounter data
             {
@@ -420,7 +408,9 @@ document.addEventListener("DOMContentLoaded", async() =>            //autofills 
                 primary_type: primaryType,
                 caught: caughtValue,
                 alive: aliveValue,
-                location: locationValue
+                location: locationValue,
+                nickname: nicknameValue,
+                trainer_name: trainerValue
             };
                 
             try     
@@ -619,7 +609,8 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
 document.addEventListener("DOMContentLoaded", function ()               //displays encounters and pairs for selected game
 {
     const gameSelect = document.getElementById("gameSelect");
-    encounterList = document.getElementById("encounterList");             //initializes input from game select 
+    trainer1List = document.getElementById("trainer1List");             //initializes input from game select 
+    trainer2List = document.getElementById("trainer2List");
     deadEncounterList = document.getElementById("deadEncounterList");                                                 
 
     gameSelect.selectedIndex = 0;               //sets selection to default
@@ -669,7 +660,8 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
         }
         else 
         {
-            encounterList.innerHTML = ""; // Clear all lists if no game is selected
+            trainer1List.innerHTML = ""; // Clear all lists if no game is selected
+            trainer2List.innerHTML = "";
             pairsList.innerHTML = "";
             deadEncounterList.innerHTML = ""; 
         }
@@ -679,6 +671,25 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
 });
 
 
+
+
+
+document.getElementById("CreateGameButton").addEventListener("click", function ()           //toggles CreateGame area visibility
+{
+    const CreateGameForm = document.getElementById("CreateGameContainer");
+
+    if (CreateGameForm.style.display === "none" || CreateGameForm.style.display === "") 
+    {
+        CreateGameForm.style.display = "block"; 
+        this.textContent = "−"; 
+    } 
+    
+    else 
+    {
+        CreateGameForm.style.display = "none"; 
+        this.textContent = "+"; 
+    }
+});
 
 
 
@@ -741,27 +752,22 @@ document.addEventListener("DOMContentLoaded", function () {             //handle
         statusModal.style.display = "flex";
     });
 
-    // Close modal when clicking 'x' button
-    closeButton.addEventListener("click", function () 
-    {
+    statusModal.style.display = "none";
+
+    // Show modal on button click
+    statusButton.addEventListener("click", function () {
+        statusModal.style.display = "flex";
+    });
+
+    // Close modal when clicking the close button
+    closeButton.addEventListener("click", function () {
         statusModal.style.display = "none";
     });
 
-    // Close modal when clicking outside the content
-    window.addEventListener("click", function (event) 
-    {
+    // Close modal if clicking outside of it
+    window.addEventListener("click", function (event) {
         if (event.target === statusModal) {
             statusModal.style.display = "none";
-        }
-    });
-
-    // Change Status Functionality
-    changeStatusButton.addEventListener("click", function () 
-    {
-        let newStatus = prompt("Enter new status:");
-        if (newStatus) 
-            {
-            statusText.textContent = newStatus;
         }
     });
 });
