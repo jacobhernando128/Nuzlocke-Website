@@ -621,3 +621,91 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
 
     fetchGames();
 });
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", function ()               // handles info button behavior for HTML
+{
+    const infoButton = document.getElementById("infoButton");
+    const infoModal = document.getElementById("infoModal");
+    const closeButton = document.querySelector(".close");
+
+    // Ensure modal starts hidden
+    infoModal.style.display = "none";
+
+    // Open modal on button click
+    infoButton.addEventListener("click", function () {
+        infoModal.style.display = "flex";
+    });
+
+    // Close modal when close button is clicked
+    closeButton.addEventListener("click", function () {
+        infoModal.style.display = "none";
+    });
+
+    // Close modal when clicking outside the modal content
+    window.addEventListener("click", function (event) {
+        if (event.target === infoModal) {
+            infoModal.style.display = "none";
+        }
+    });
+});
+
+
+
+document.getElementById("encountersButton").addEventListener("click", function ()       //handles encounter dropdown info behavior for HTML
+{
+    var dropdown = document.getElementById("encountersDropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+});
+
+// Close dropdown when clicking outside
+window.addEventListener("click", function (event) 
+{
+    if (!event.target.matches("#encountersButton")) 
+    {
+        document.getElementById("encountersDropdown").style.display = "none";
+    }
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function () {             //handles status button behavior for HTML
+    const statusButton = document.getElementById("statusButton");
+    const statusModal = document.getElementById("statusModal");
+    const closeButton = document.querySelector("#statusModal .close");
+    const changeStatusButton = document.getElementById("changeStatusButton");
+    const statusText = document.getElementById("statusText");
+
+    // Open status modal
+    statusButton.addEventListener("click", function () 
+    {
+        statusModal.style.display = "flex";
+    });
+
+    // Close modal when clicking 'x' button
+    closeButton.addEventListener("click", function () 
+    {
+        statusModal.style.display = "none";
+    });
+
+    // Close modal when clicking outside the content
+    window.addEventListener("click", function (event) 
+    {
+        if (event.target === statusModal) {
+            statusModal.style.display = "none";
+        }
+    });
+
+    // Change Status Functionality
+    changeStatusButton.addEventListener("click", function () 
+    {
+        let newStatus = prompt("Enter new status:");
+        if (newStatus) 
+            {
+            statusText.textContent = newStatus;
+        }
+    });
+});
