@@ -4,6 +4,9 @@ let deadEncounterList;       //declares encounter and dead encounters globally f
 
 async function fetchEncounters(gameID)          //updates the encounters list for the specified game
 {
+    encounterList = document.getElementById("encounterList");             //initializes lists for display
+    deadEncounterList = document.getElementById("deadEncounterList");
+
     try 
     {
         const response = await fetch(`http://localhost:8000/encounters?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
@@ -162,6 +165,8 @@ async function fetchPairs(gameID)
 
 async function updateLists(gameID)  //refreshes lists after any updates to the database
 {
+    pairsList = document.getElementById("pairsList");       //initializes pairsList for clearing if the challenge is a nuzlocke
+
     try 
     {
         const response = await fetch(`http://localhost:8000/game/challenge-type?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
@@ -182,6 +187,8 @@ async function updateLists(gameID)  //refreshes lists after any updates to the d
         let currentGameType = data.challenge_type               //grabs challenge type to determine if fetchPairs() is necessary to call
 
         await fetchEncounters(gameID);              //calls fetchEncounters to update the encounter and dead encounter lists
+
+        pairsList.innerHTML = "";
 
         if (currentGameType && currentGameType.toLowerCase() == "soul link")            
         {
@@ -550,7 +557,7 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
 document.addEventListener("DOMContentLoaded", function ()               //displays encounters and pairs for selected game
 {
     const gameSelect = document.getElementById("gameSelect");
-    encounterList = document.getElementById("encounterList");             //initializes input from game select and the encounter displays
+    encounterList = document.getElementById("encounterList");             //initializes input from game select 
     deadEncounterList = document.getElementById("deadEncounterList");                                                 
 
     gameSelect.selectedIndex = 0;               //sets selection to default
