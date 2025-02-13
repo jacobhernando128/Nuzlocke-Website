@@ -1,11 +1,16 @@
 let encounterList;
+let trainer1List;
+let trainer2List;
 let pairsList;
 let deadEncounterList;       //declares encounter and dead encounters globally for updating purposes
 
 async function fetchEncounters(gameID)          //updates the encounters list for the specified game
 {
-    encounterList = document.getElementById("encounterList");             //initializes lists for display
+    trainer1List = document.getElementById("trainer1List");             //initializes lists for display
+    trainer2List = document.getElementById("trainer2List")
     deadEncounterList = document.getElementById("deadEncounterList");
+    let trainer1Name;
+    let trainer2Name;
 
     try 
     {
@@ -26,29 +31,80 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
         const data = await response.json();
         console.log("Fetched Encounters:", data);
 
-        encounterList.innerHTML = ""                        //clears lists before posting new encounters
+        try 
+        {
+            const response = await fetch(`http://localhost:8000/trainers?game_id=${gameID}`,            //fetches trainer names for specefied game
+            {
+                method: "GET",
+                headers: 
+                {
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if(!response.ok)
+            {
+                throw new Error(`HTTP error! Status: ${response.status}`);              //error if it cannot fetch
+            }
+
+            const trainerData = await response.json();                  
+            trainer1Name = trainerData.trainers.Trainer1;               //assigns values for trainer names
+            trainer2Name = trainerData.trainers.Trainer2;
+
+        } catch (error) 
+        {
+            console.error("Error fetching first pair's alive value:", error);                 //error if form submission occurs
+            alert("Failed to fetch first pair's alive value. Please try again later.");
+        }
+
+        trainer1List.innerHTML = ""                        //clears lists before posting new encounters
+        trainer2List.innerHTML = ""
         deadEncounterList.innerHTML = "";
+
+        console.log(trainer1Name);
+        console.log(trainer2Name);
 
         if (data.status === "success" && Array.isArray(data.encounters) && data.encounters.length > 0)          //if the data is correctly defined and contains encounters
         {
             data.encounters.forEach(encounter =>                    //formats and appends each encounter to the list
             {
-                let listItem = document.createElement("li");
-                listItem.textContent = `Encounter: ${encounter.Encounter} (Type: ${encounter.PrimaryType}) | ` + `Location: ${encounter.Location} | ` + `Caught: ${encounter.Caught ? "Yes" : "No"} | ` + `Alive: ${encounter.Alive ? "Yes" : "No"}`;
+                let encounterBox = document.createElement("div");
+                encounterBox.className = "encounter-box";
+                encounterBox.innerHTML = `
+                    <h3>${encounter.Encounter}</h3>
+                    <p><strong>Type:</strong> ${encounter.PrimaryType}</p>
+                    <p><strong>Location:</strong> ${encounter.Location}</p>
+                    <p><strong>Caught:</strong> ${encounter.Caught ? "Yes" : "No"}</p>
+                    <p><strong>Alive:</strong> ${encounter.Alive ? "Yes" : "No"}</p>
+                    <p><strong>Nickname:</strong> ${encounter.Nickname}</p>
+                `;
+
+                encounterBox.addEventListener("click", () => {
+                    alert(`You selected ${encounter.Encounter} from ${encounter.Location}`);                //interacts on click
+                });
         
+                console.log(encounter.TrainerInput)
                 if (encounter.Alive) 
                 {
-                    encounterList.appendChild(listItem);                        // adds to main encounter list if alive
+                    if (encounter.TrainerInput == trainer1Name) 
+                    {
+                        trainer1List.appendChild(encounterBox);                        // adds to Trainer1 encounter list if alive
+                    } 
+                    else if (encounter.TrainerInput == trainer2Name) 
+                    {
+                        trainer2List.appendChild(encounterBox);                        // adds to Trainer2 encounter list if alive
+                    }
                 } 
                 else 
                 {
-                    deadEncounterList.appendChild(listItem);                    // adds to dead encounters list if not 
+                    deadEncounterList.appendChild(encounterBox);                    // adds to dead encounters list if not 
                 }
             });
         } 
         else 
         {
-            encounterList.innerHTML = "<li>No encounters found.</li>";
+            trainer1List.innerHTML = "<li>No encounters found.</li>";
+            trainer2List.innerHTML = "<li>No encounters found.</li>";
             deadEncounterList.innerHTML = "<li>No dead encounters listed.</li>"; 
         }
     } catch (error) 
