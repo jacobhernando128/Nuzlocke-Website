@@ -161,6 +161,40 @@ async function fetchPairs(gameID)
     }
 }
 
+async function updateLists(gameID)  //refreshes lists after any updates to the database
+{
+    try 
+    {
+        const response = await fetch(`http://localhost:8000/game/challenge-type?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
+        {
+            method: "GET",
+            headers: 
+            {
+                "Content-Type": "application/json"
+            },
+        });
+
+        if(!response.ok)
+        {
+            throw new Error(`HTTP error! Status: ${response.status}`);              //error if it cannot fetch
+        }
+
+        const data = await response.json();
+        let currentGameType = data.challenge_type               //grabs challenge type to determine if fetchPairs() is necessary to call
+
+        await fetchEncounters(gameID);              //calls fetchEncounters to update the encounter and dead encounter lists
+
+        if (currentGameType && currentGameType.toLowerCase() == "soul link")            
+        {
+            await fetchPairs(gameID);               //calls fetchPairs to update the pairs list only if the challenge type is a soul link
+        }   
+
+    } catch (error) 
+    {
+        console.error("Error fetching ChallengeType for gameID:", error);                 //error if form submission occurs
+        alert("Failed to fetch ChallengeType for gameID. Please try again later.");
+    }
+}
 {
     const CreateGameForm = document.getElementById("CreateGameContainer");
 
