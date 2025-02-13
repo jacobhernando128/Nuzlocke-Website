@@ -167,6 +167,12 @@ async function updateLists(gameID)  //refreshes lists after any updates to the d
 {
     pairsList = document.getElementById("pairsList");       //initializes pairsList for clearing if the challenge is a nuzlocke
 
+    if (!gameID) 
+    {
+        pairsList.innerHTML = "";
+        return;
+    }
+
     try 
     {
         const response = await fetch(`http://localhost:8000/game/challenge-type?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
@@ -607,8 +613,9 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
         }
         else 
         {
-            encounterList.innerHTML = ""; // Clear the list if no game is selected
-            deadEncounterList.innerHTML = ""; // Clear the dead encounters list if no game is selected
+            encounterList.innerHTML = ""; // Clear all lists if no game is selected
+            pairsList.innerHTML = "";
+            deadEncounterList.innerHTML = ""; 
         }
     });
 
