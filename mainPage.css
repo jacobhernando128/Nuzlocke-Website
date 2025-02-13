@@ -1,0 +1,227 @@
+body 
+{
+    font-family: Arial, sans-serif;
+}
+
+/*Info button*/
+#infoButton 
+{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+#infoModal 
+{
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content 
+{
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+.close 
+{
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+
+
+
+/*Select Game*/
+#gameSelect 
+{
+    position: absolute;  /* Position it relative to the screen */
+    top: 20px;           /* Place it near the top */
+    left: 50%;           /* Move it to the center */
+    transform: translateX(-50%); /* Adjust to perfectly center it */
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: white;
+}
+
+
+
+
+
+/*Create game button*/
+#CreateGameButton 
+{
+    position: fixed;
+    top: 20px;  /* Aligns with the info button */
+    Left: 20px; /* Spaces it to the left of the info button */
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+
+#CreateGameButton:hover 
+{
+    background: #0056b3; /* Darker shade on hover */
+}
+
+
+
+
+
+/* Encounters Button */
+#encountersButton {
+    position: fixed;
+    top: 20px;
+    left: 450px;  /* Positioned between "Select Game" and "+" */
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Dropdown Content (Hidden by Default) */
+#encountersDropdown {
+    display: none;
+    position: fixed;
+    top: 60px;  /* Below the button */
+    right: 130px;
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    width: 150px;
+}
+
+/* Style for dropdown items */
+#encountersDropdown p 
+{
+    padding: 8px;
+    margin: 0;
+    cursor: pointer;
+}
+
+#encountersDropdown p:hover 
+{
+    background: #f1f1f1;
+}
+
+
+
+
+
+/* Status Button */
+#statusButton {
+    position: fixed;
+    top: 15px; /* Slightly lowered for better alignment */
+    right: 185px; /* Adjusted spacing to fit better with other buttons */
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px; /* Slightly smaller for consistency */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+#statusButton:hover {
+    background: #0056b3; /* Darker blue on hover */
+}
+
+/* Modal Styling */
+#statusModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal Box */
+.modal-content {
+    background: white;
+    padding: 25px; /* More padding for better spacing */
+    border-radius: 10px; /* Smoother corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 320px; /* Slightly wider */
+    position: relative;
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 22px; /* Slightly bigger for better visibility */
+    font-weight: bold;
+    cursor: pointer;
+    color: #333;
+    transition: color 0.2s ease-in-out;
+}
+
+.close:hover {
+    color: #ff0000; /* Red on hover for emphasis */
+}
+
+/* Change Status Button */
+#changeStatusButton {
+    margin-top: 20px;
+    padding: 10px 15px;
+    border: none;
+    background: #28a745;
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: background 0.2s ease-in-out;
+}
+
+#changeStatusButton:hover {
+    background: #218838; /* Darker green on hover */
+}
