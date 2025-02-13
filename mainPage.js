@@ -1,4 +1,61 @@
 document.getElementById("CreateGameButton").addEventListener("click", function () 
+let encounterList;
+let pairsList;
+let deadEncounterList;       //declares encounter and dead encounters globally for updating purposes
+
+async function fetchEncounters(gameID)          //updates the encounters list for the specified game
+{
+    try 
+    {
+        const response = await fetch(`http://localhost:8000/encounters?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
+        {
+            method: "GET",
+            headers: 
+            {
+                "Content-Type": "application/json"
+            },
+        });
+
+        if(!response.ok)
+        {
+            throw new Error(`HTTP error! Status: ${response.status}`);              //error if it cannot fetch
+        }
+
+        const data = await response.json();
+        console.log("Fetched Encounters:", data);
+
+        encounterList.innerHTML = ""                        //clears lists before posting new encounters
+        deadEncounterList.innerHTML = "";
+
+        if (data.status === "success" && Array.isArray(data.encounters) && data.encounters.length > 0)          //if the data is correctly defined and contains encounters
+        {
+            data.encounters.forEach(encounter =>                    //formats and appends each encounter to the list
+            {
+                let listItem = document.createElement("li");
+                listItem.textContent = `Encounter: ${encounter.Encounter} (Type: ${encounter.PrimaryType}) | ` + `Location: ${encounter.Location} | ` + `Caught: ${encounter.Caught ? "Yes" : "No"} | ` + `Alive: ${encounter.Alive ? "Yes" : "No"}`;
+        
+                if (encounter.Alive) 
+                {
+                    encounterList.appendChild(listItem);                        // adds to main encounter list if alive
+                } 
+                else 
+                {
+                    deadEncounterList.appendChild(listItem);                    // adds to dead encounters list if not 
+                }
+            });
+        } 
+        else 
+        {
+            encounterList.innerHTML = "<li>No encounters found.</li>";
+            deadEncounterList.innerHTML = "<li>No dead encounters listed.</li>"; 
+        }
+    } catch (error) 
+    {
+        console.error("Error fetching encounters:", error); 
+        alert("Failed to fetch encounters. Please try again later.");               //error if encounters cannot be loaded
+    }
+}
+
 {
     const CreateGameForm = document.getElementById("CreateGameContainer");
 
