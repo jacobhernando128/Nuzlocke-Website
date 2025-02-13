@@ -734,6 +734,44 @@ app.put("/games/update-trainer2", (req, res, next) => // updates Trainer2 name f
 
 
 
+app.get("/trainers", (req, res, next) => //retrieves trainer1 and trainer2 for a specific game based on game_id
+{ 
+    let strGameID = req.query.game_id;
+    let strCommand = "SELECT Trainer1, Trainer2 FROM tblGames WHERE GameID = ?";
+
+    ConNuzlocke.getConnection(function (err, connection) 
+    {
+        if (err) 
+        {
+            console.log(err);
+            return res.status(500).json({ status: "error", message: "Database connection failed" });
+        } 
+        else 
+        {
+            connection.query(strCommand, [strGameID], (err, result) => 
+            {  
+                connection.release();
+
+                if (err) 
+                {
+                    console.error("Query Error:", err);
+                    return res.status(500).json({ status: "error", message: "Query execution failed" });
+                }
+
+                if (result.length > 0) 
+                {
+                    res.status(200).json({ status: "success", trainers: result[0] });
+                } 
+                else 
+                {
+                    res.status(404).json({ status: "error", message: "Game not found" });
+                }
+            });
+        }
+    });
+});
+
+
 app.listen(HTTP_PORT, () => {
     console.log(`Server is running on port ${HTTP_PORT}`);
 });
