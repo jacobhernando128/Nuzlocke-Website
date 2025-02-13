@@ -123,10 +123,12 @@ app.post("/games", (req, res, next) => // Posts new game data to tblGames
     let strGeneration = req.body.generation;
     let strChallengeType = req.body.challenge_type;
     let strChallengeNotes = req.body.challenge_notes;
+    let strTrainer1 = req.body.trainer1;
+    let strTrainer2 = req.body.trainer2;
     
     let strCommand = 
-        "INSERT INTO tblGames (GameName, Generation, ChallengeType, ChallengeNotes) " + 
-        "VALUES (?, ?, ?, ?)";
+        "INSERT INTO tblGames (GameName, Generation, ChallengeType, ChallengeNotes, Trainer1, Trainer2) " + 
+        "VALUES (?, ?, ?, ?, ?, ?)";
 
     ConNuzlocke.getConnection(function (err, connection) 
     {
@@ -137,7 +139,7 @@ app.post("/games", (req, res, next) => // Posts new game data to tblGames
         } 
         else 
         {
-            connection.query(strCommand, [strGameName, strGeneration, strChallengeType, strChallengeNotes], (err, result) => 
+            connection.query(strCommand, [strGameName, strGeneration, strChallengeType, strChallengeNotes, strTrainer1, strTrainer2], (err, result) => 
             {  
                 connection.release();
 
@@ -167,10 +169,12 @@ app.post("/encounters", (req, res, next) => // Posts new encounter data to tblEn
     let strCaught = req.body.caught;
     let strAlive = req.body.alive;
     let strLocation = req.body.location;
+    let strNickname = req.body.nickname;
+    let strTrainerInput = req.body.trainer_input;
 
     let strCommand = 
-        "INSERT INTO tblEncounters (GameID, Encounter, PrimaryType, Caught, Alive, Location) " + 
-        "VALUES (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO tblEncounters (GameID, Encounter, PrimaryType, Caught, Alive, Location, Nickname, TrainerInput) " + 
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     ConNuzlocke.getConnection(function (err, connection) 
     {
@@ -181,7 +185,7 @@ app.post("/encounters", (req, res, next) => // Posts new encounter data to tblEn
         } 
         else 
         {
-            connection.query(strCommand, [strGameID, strEncounter, strPrimaryType, strCaught, strAlive, strLocation], (err, result) => 
+            connection.query(strCommand, [strGameID, strEncounter, strPrimaryType, strCaught, strAlive, strLocation, strTrainer, strNickname, strTrainerInput], (err, result) => 
             {  
                 connection.release();
 
@@ -562,7 +566,8 @@ app.get("/encounter/alive", (req, res, next) => // Gets alive status and name fo
 {  
     let encounterID = req.query.encounter_id;
 
-    if (!encounterID) {
+    if (!encounterID) 
+    {
         return res.status(400).json({ status: "error", message: "encounter_id is required" });
     }
 
@@ -605,31 +610,37 @@ app.get("/encounter/alive", (req, res, next) => // Gets alive status and name fo
 
 
 
-app.get("/game/challenge-type", (req, res, next) => {  
-    // Gets ChallengeType for a specific game
+app.get("/game/challenge-type", (req, res, next) => // gets challenge type for a specific game
+{   
     let gameID = req.query.game_id;
 
-    if (!gameID) {
+    if (!gameID) 
+    {
         return res.status(400).json({ status: "error", message: "game_id is required" });
     }
 
     let strCommand = "SELECT ChallengeType FROM tblGames WHERE GameID = ?";
 
-    ConNuzlocke.getConnection((err, connection) => {
-        if (err) {
+    ConNuzlocke.getConnection((err, connection) => 
+    {
+        if (err) 
+        {
             console.error("Database Connection Error:", err);
             return res.status(500).json({ status: "error", message: "Database connection failed" });
         }
 
-        connection.query(strCommand, [gameID], (err, result) => {
-            connection.release(); // Ensure connection is released after the query
+        connection.query(strCommand, [gameID], (err, result) => 
+        {
+            connection.release(); 
 
-            if (err) {
+            if (err) 
+            {
                 console.error("Query Error:", err);
                 return res.status(500).json({ status: "error", message: "Query execution failed" });
             }
 
-            if (result.length > 0) {
+            if (result.length > 0) 
+            {
                 return res.status(200).json({ 
                     status: "success", 
                     game_id: gameID, 
