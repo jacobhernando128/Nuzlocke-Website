@@ -198,17 +198,22 @@ async function fetchPairs(gameID)
                     alert("Failed to fetch second pair's alive value. Please try again later.");
                 }
         
-                let listItem = document.createElement("li");                        //formats input for pairs
-                listItem.textContent = `First encounter: ${firstPairName} | Second encounter: ${secondPairName} | ` + `Rostered: ${pair.Rostered ? "Yes" : "No"}`;
+                let pairBox = document.createElement("div");
+                pairBox.className = "pair-box";
+                pairBox.innerHTML = `
+                    <h3>${firstPairName} & ${secondPairName}</h3>
+                    <p><strong>Rostered:</strong> ${pair.Rostered ? "Yes" : "No"}</p>
+                `;
+
+                // Add interactivity on click
+                pairBox.addEventListener("click", () => {
+                    alert(`Pair: ${firstPairName} & ${secondPairName}\nRostered: ${pair.Rostered ? "Yes" : "No"}\nStatus: ${firstPairAlive && secondPairAlive ? "Alive" : "Fainted"}`);
+                });
         
                 if (firstPairAlive == 1 && secondPairAlive == 1) 
                 {
-                    pairsList.appendChild(listItem);  // Adds to pair list if both encounters are alive
+                    pairsList.appendChild(pairBox);  // Adds to pair list if both encounters are alive
                 } 
-                else 
-                {
-                    pairsList.appendChild(listItem);  // Adds to dead pairs list if not 
-                }
             };
         } 
     } catch
