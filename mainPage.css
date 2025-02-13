@@ -213,7 +213,7 @@ body
 
 
 
-/* Styles the left panel for encounters */
+
 /* Styles the left panel for Trainer1 encounters */
 #trainer1Table {
     width: 33%;
@@ -290,3 +290,35 @@ body {
     margin-bottom: 10px;
 }
 
+
+
+
+/* Dead Encounters Section (Smaller & Styled to Match) */
+#deadEncountersSection {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    background: #ffebeb;
+    border-top: 2px solid #cc0000;
+    overflow-y: auto;
+    text-align: center;
+    padding: 10px;
+}
+
+#deadEncounterList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Dead Encounter Boxes */
+.dead-encounter-box {
+    background: #ffcccc;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #cc0000;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
