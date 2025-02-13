@@ -796,3 +796,22 @@ document.addEventListener("DOMContentLoaded", function () {             //handle
         }
     });
 });
+
+
+
+
+
+document.getElementById("CreateGameButton").addEventListener("click", () => {               //create game button functionality
+    document.getElementById("CreateGameContainer").style.display = "flex"; // Show modal
+});
+
+document.getElementById("cancelCreateGame").addEventListener("click", () => {
+    document.getElementById("CreateGameContainer").style.display = "none"; // Hide modal
+});
+
+// Close modal when clicking outside the form
+window.addEventListener("click", (event) => {
+    if (event.target.id === "CreateGameContainer") {
+        document.getElementById("CreateGameContainer").style.display = "none";
+    }
+});
