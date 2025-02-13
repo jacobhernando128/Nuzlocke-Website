@@ -104,11 +104,11 @@ body
 
 
 
-/* Encounters Button */
+/* Encounters Button - Aligned to the Left */
 #encountersButton {
     position: fixed;
     top: 20px;
-    left: 450px;  /* Positioned between "Select Game" and "+" */
+    left: 450px;  /* Adjusted closer to the left */
     background: #007bff;
     color: white;
     border: none;
@@ -118,12 +118,12 @@ body
     cursor: pointer;
 }
 
-/* Dropdown Content (Hidden by Default) */
+/* Dropdown Content - Aligned Below the Button */
 #encountersDropdown {
     display: none;
     position: fixed;
-    top: 60px;  /* Below the button */
-    right: 130px;
+    top: 60px;  /* Positioned below the button */
+    left: 450px; /* Aligned with Encounters Button */
     background: white;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
@@ -132,39 +132,31 @@ body
 }
 
 /* Style for dropdown items */
-#encountersDropdown p 
-{
+#encountersDropdown p {
     padding: 8px;
     margin: 0;
     cursor: pointer;
 }
 
-#encountersDropdown p:hover 
-{
+#encountersDropdown p:hover {
     background: #f1f1f1;
 }
 
 
 
 
-
-/* Status Button */
+/* Status Button - Positioned Next to Encounters */
 #statusButton {
     position: fixed;
-    top: 15px; /* Slightly lowered for better alignment */
-    right: 185px; /* Adjusted spacing to fit better with other buttons */
+    top: 20px;
+    right: 190px;  /* Placed left of "Encounters" */
     background: #007bff;
     color: white;
     border: none;
     padding: 10px 15px;
-    border-radius: 6px; /* Slightly smaller for consistency */
+    border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
-    transition: background 0.2s ease-in-out;
-}
-
-#statusButton:hover {
-    background: #0056b3; /* Darker blue on hover */
 }
 
 /* Modal Styling */
@@ -176,52 +168,100 @@ body
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Modal Box */
 .modal-content {
     background: white;
-    padding: 25px; /* More padding for better spacing */
-    border-radius: 10px; /* Smoother corners */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 320px; /* Slightly wider */
+    width: 300px;
     position: relative;
 }
 
 /* Close Button */
 .close {
     position: absolute;
-    top: 12px;
-    right: 18px;
-    font-size: 22px; /* Slightly bigger for better visibility */
-    font-weight: bold;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
     cursor: pointer;
-    color: #333;
-    transition: color 0.2s ease-in-out;
 }
 
-.close:hover {
-    color: #ff0000; /* Red on hover for emphasis */
-}
-
-/* Change Status Button */
+/* Change Status Button Inside Modal */
 #changeStatusButton {
-    margin-top: 20px;
-    padding: 10px 15px;
+    margin-top: 15px;
+    padding: 8px 12px;
     border: none;
     background: #28a745;
     color: white;
     cursor: pointer;
-    border-radius: 6px;
-    font-size: 15px;
-    transition: background 0.2s ease-in-out;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
 #changeStatusButton:hover {
-    background: #218838; /* Darker green on hover */
+    background: #218838;
+}
+
+
+
+
+
+/* Styles the left panel for encounters */
+#trainer1Table {
+    width: 33%;
+    position: fixed;
+    left: 0;
+    top: 50px;
+    bottom: 0;
+    background: #f8f8f8;
+    overflow-y: auto;
+    padding: 10px;
+    border-right: 2px solid #ccc;
+}
+
+/* Styles the middle panel for Trainer2 encounters */
+#trainer2Table {
+    width: 33%;
+    position: fixed;
+    left: 33%;
+    top: 50px;
+    bottom: 0;
+    background: #eef7ff;
+    overflow-y: auto;
+    padding: 10px;
+    border-right: 2px solid #bbb;
+}
+
+/* Styles encounter boxes */
+.encounter-box {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s ease;
+    margin-bottom: 8px;
+}
+
+.encounter-box:hover {
+    transform: scale(1.05);
+    background: #e0f7fa;
+}
+
+.encounter-box h3 {
+    margin: 0;
+    color: #333;
+}
+
+.encounter-box p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
 }
