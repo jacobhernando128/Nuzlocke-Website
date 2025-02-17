@@ -695,6 +695,89 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
     fetchGames();
 });
 
+document.addEventListener("DOMContentLoaded", () =>             // deals with status button functionality
+{
+    const statusButton = document.getElementById("statusButton");
+    const statusModal = document.getElementById("statusModal");
+    const closeModal = document.querySelector(".close");                //define button elements
+    const statusText = document.getElementById("statusText");
+    const form = document.getElementById("statusForm");
+
+    async function changeGameStatus(event) 
+    {
+        event.preventDefault();         //prevents frontend from running before backend is done
+        
+        console.log("Inside of changeGameStatus:", currentGameID)
+        if (!currentGameID) 
+        {
+            alert("Please select a game first.");
+            return;
+        }
+
+        const selectedStatus = document.querySelector('input[name="gameStatus"]:checked'); // Read selected status from the radio input
+
+        if (!selectedStatus) 
+        {
+            alert("Please select a status.");
+            return;
+        }
+
+        try 
+        {
+            const response = await fetch(`http://localhost:8000/games/update-status`, 
+            {
+                method: "PUT", 
+                headers: 
+                {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(
+                {
+                    game_id: currentGameID,
+                    status: selectedStatus.value  // Get the value from the selected radio input
+                })
+            });
+
+            if (!response.ok) 
+            {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log("Updated Game Status:", result);
+
+            if (result.status === "success") 
+            {
+                statusText.textContent = selectedStatus.value; // Update displayed status
+            } 
+            else 
+            {
+                alert("Failed to update status.");
+            }
+        } catch (error) {
+            console.error("Error updating game status:", error);
+            alert("Error updating game status.");
+        }
+    }
+
+    // Show modal on button click
+    statusButton.addEventListener("click", () =>    
+    {
+        statusModal.style.display = "flex";
+        fetchGameStatus(currentGameID);
+    });
+
+    // Close modal
+    closeModal.addEventListener("click", () => 
+    {
+        statusModal.style.display = "none";
+    });
+
+    // Change status on button click
+    form.addEventListener("submit", changeGameStatus);
+});
+
+
 
 
 
