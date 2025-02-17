@@ -107,13 +107,26 @@
     </div>
 
     <button id="statusButton">Status</button>
+
     <div id="statusModal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <p>Your current status: <span id="statusText">Active</span></p>
-            <button id="changeStatusButton">Change Status</button>
+            
+            <p>Select new status:</p>
+            <form id="statusForm">
+                <label>
+                    <input type="radio" name="gameStatus" value="Ongoing"> Ongoing
+                </label>
+                <label>
+                    <input type="radio" name="gameStatus" value="Complete"> Complete
+                </label>
+
+                <button type="submit" id="changeStatusButton">Change Status</button>
+            </form>
         </div>
     </div>
+
 
 
 
