@@ -695,6 +695,56 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
     fetchGames();
 });
 
+async function fetchGameStatus(gameID) //fetches and displays current game status
+{
+    const changeStatusButton = document.getElementById("changeStatusButton");
+    const statusText = document.getElementById("statusText");
+
+    console.log("Here is the fetch gameID:", gameID)
+    if (!gameID) 
+    {
+        statusText.textContent = "Please select a game";
+        changeStatusButton.style.display = "none";      //hide change button if no game is selected
+        return;
+    }
+
+    try 
+    {
+        const response = await fetch(`http://localhost:8000/game/status?game_id=${gameID}`, 
+        {
+            method: "GET",
+            headers: 
+            {
+                "Content-Type": "application/json"
+            },
+        });
+
+        if (!response.ok) 
+        {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Fetched Game Status:", data);
+
+        if (data.status === "success" && data.game_status) 
+        {
+            statusText.textContent = data.game_status;
+            changeStatusButton.style.display = "block"; // Show the button if a game is selected
+        } 
+        else 
+        {
+            statusText.textContent = "Status unavailable";
+            changeStatusButton.style.display = "none";
+        }
+    } catch (error) 
+    {
+        console.error("Error fetching game status:", error);
+        statusText.textContent = "Error fetching status";
+    }
+}
+
+
 document.addEventListener("DOMContentLoaded", () =>             // deals with status button functionality
 {
     const statusButton = document.getElementById("statusButton");
