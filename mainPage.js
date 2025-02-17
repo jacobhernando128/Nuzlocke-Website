@@ -248,6 +248,9 @@ async function updateLists(gameID)  //refreshes lists after any updates to the d
     pairsList = document.getElementById("pairsList");       //initializes pairsList for clearing if the challenge is a nuzlocke
     currentGameID = gameID;
 
+    console.log("Starting fetch")
+    fetchGameStatus(gameID);                               //updates status button logic for specified game
+
     if (!gameID) 
     {
         pairsList.innerHTML = "";
