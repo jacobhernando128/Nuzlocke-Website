@@ -610,7 +610,7 @@ app.get("/encounter/alive", (req, res, next) => // Gets alive status and name fo
 
 
 
-app.get("/game/challenge-type", (req, res, next) => // gets challenge type for a specific game
+app.get("/game/challenge-type", (req, res, next) => // Gets challenge type for a specific game
 {   
     let gameID = req.query.game_id;
 
@@ -655,7 +655,7 @@ app.get("/game/challenge-type", (req, res, next) => // gets challenge type for a
 
 
 
-app.put("/games/update-trainer1", (req, res, next) => // updates Trainer1 name from specified GameID
+app.put("/games/update-trainer1", (req, res, next) => // Updates Trainer1 name from specified GameID
 {
     const { gameID, trainer1 } = req.body; 
 
@@ -828,6 +828,50 @@ app.get("/game/status", (req, res, next) => // Gets the status of a specific gam
         });
     });
 });
+
+
+
+app.put("/games/update-status", (req, res, next) => // Updates game status in tblGames  
+{   
+    let intGameID = req.body.game_id;
+    let strNewStatus = req.body.status;
+
+    let strCommand = "UPDATE tblGames SET Status = ? WHERE GameID = ?";
+
+    ConNuzlocke.getConnection(function (err, connection) 
+    {
+        if (err) 
+        {
+            console.log(err);
+            return res.status(500).json({ status: "error", message: "Database connection failed" });
+        } 
+        else 
+        {
+            connection.query(strCommand, [strNewStatus, intGameID], (err, result) => 
+            {  
+                connection.release();
+
+                if (err) 
+                {
+                    console.error("Query Error:", err);
+                    return res.status(500).json({ status: "error", message: "Query execution failed" });
+                }
+
+                if (result.affectedRows === 0) 
+                {
+                    return res.status(404).json({ status: "error", message: "Game not found" });
+                }
+
+                res.status(200).json({ 
+                    status: "success", 
+                    message: "Game status updated successfully" 
+                });
+            });
+        }
+    });
+});
+
+
 app.listen(HTTP_PORT, () => {
     console.log(`Server is running on port ${HTTP_PORT}`);
 });
