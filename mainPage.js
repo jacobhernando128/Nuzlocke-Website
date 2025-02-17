@@ -761,7 +761,7 @@ document.addEventListener("DOMContentLoaded", () =>             // deals with st
     async function changeGameStatus(event) 
     {
         event.preventDefault();         //prevents frontend from running before backend is done
-        
+
         console.log("Inside of changeGameStatus:", currentGameID)
         if (!currentGameID) 
         {
@@ -854,34 +854,61 @@ document.getElementById("CreateGameButton").addEventListener("click", function (
     }
 });
 
-
-
-document.addEventListener("DOMContentLoaded", function ()               // handles info button behavior for HTML
+document.querySelector("#CreateGameContainer .close").addEventListener("click", function ()     // close the modal when clicking the close button
 {
-    const infoButton = document.getElementById("infoButton");
-    const infoModal = document.getElementById("infoModal");
-    const closeButton = document.querySelector(".close");
-
-    // Ensure modal starts hidden
-    infoModal.style.display = "none";
-
-    // Open modal on button click
-    infoButton.addEventListener("click", function () {
-        infoModal.style.display = "flex";
-    });
-
-    // Close modal when close button is clicked
-    closeButton.addEventListener("click", function () {
-        infoModal.style.display = "none";
-    });
-
-    // Close modal when clicking outside the modal content
-    window.addEventListener("click", function (event) {
-        if (event.target === infoModal) {
-            infoModal.style.display = "none";
-        }
-    });
+    closeCreateGameModal();
 });
+
+document.getElementById("cancelCreateGame").addEventListener("click", function ()   // close modal when clicking the "Cancel" button
+{
+    closeCreateGameModal();
+});
+
+document.getElementById("CreateGameContainer").addEventListener("click", function (event)       // ensures it only triggers when clicking on the background
+{
+    if (event.target === this) 
+    {  
+        closeCreateGameModal();
+    } 
+});
+
+function closeCreateGameModal()             // function to hide modal and reset button text
+{                       
+    document.getElementById("CreateGameContainer").style.display = "none";
+    document.getElementById("CreateGameButton").textContent = "+"; // Reset button text
+}
+
+
+
+
+
+// handles info button behavior for HTML
+document.getElementById("infoButton").addEventListener("click", function () 
+{
+    document.getElementById("infoModal").style.display = "flex";
+});
+
+// Close modal when clicking the close button
+document.querySelector("#infoModal .close").addEventListener("click", function () 
+{
+    closeInfoModal();
+});
+
+// Close modal when clicking outside the modal content
+document.getElementById("infoModal").addEventListener("click", function (event) 
+{
+    if (event.target === this) 
+    {
+        closeInfoModal();
+    }
+});
+
+// Function to close the info modal
+function closeInfoModal() 
+{
+    document.getElementById("infoModal").style.display = "none";
+}
+
 
 
 
