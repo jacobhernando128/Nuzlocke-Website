@@ -3,6 +3,7 @@ let trainer2List;
 let pairsList;
 let deadEncounterList;       //declares encounter and dead encounters globally for updating purposes
 let encountersDropdown;
+let currentGameID;
 
 async function fetchEncounters(gameID)          //updates the encounters list for the specified game
 {
@@ -245,6 +246,7 @@ async function fetchPairs(gameID)
 async function updateLists(gameID)  //refreshes lists after any updates to the database
 {
     pairsList = document.getElementById("pairsList");       //initializes pairsList for clearing if the challenge is a nuzlocke
+    currentGameID = gameID;
 
     if (!gameID) 
     {
