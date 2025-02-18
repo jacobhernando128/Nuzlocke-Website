@@ -244,7 +244,7 @@ async function fetchPairs(gameID)
 
 async function updateLists(gameID)  //refreshes lists after any updates to the database
 {
-    pairsList = document.getElementById("pairsList");       //initializes pairsList for clearing if the challenge is a nuzlocke
+    pairsList = document.getElementById("pairsList");       //defines pairsList for clearing if the challenge is a nuzlocke
     currentGameID = gameID;
 
     fetchGameStatus(gameID);                               //updates status button logic for specified game
@@ -638,7 +638,8 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
     const gameSelect = document.getElementById("gameSelect");
     trainer1List = document.getElementById("trainer1List");             //initializes input from game select 
     trainer2List = document.getElementById("trainer2List");
-    deadEncounterList = document.getElementById("deadEncounterList");                                                 
+    deadEncounterList = document.getElementById("deadEncounterList");   
+    statusText = document.getElementById("statusText");                 //defines statusText to reset the status if no game is selected                                              
 
     gameSelect.selectedIndex = 0;               //sets selection to default
 
@@ -693,6 +694,7 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
             deadEncounterList.innerHTML = ""; 
             encountersDropdown.innerHTML = "<p>Select game for encounters</p>";
 
+            currentGameID = null;              //if no game is selected, sets currentGameID to nothing
         }
     });
 
@@ -927,12 +929,11 @@ window.addEventListener("click", function (event)
 
 
 
-document.addEventListener("DOMContentLoaded", function () {             //handles status button behavior for HTML
+document.addEventListener("DOMContentLoaded", function ()   //handles status button behavior for HTML
+{             
     const statusButton = document.getElementById("statusButton");
     const statusModal = document.getElementById("statusModal");
     const closeButton = document.querySelector("#statusModal .close");
-    const changeStatusButton = document.getElementById("changeStatusButton");
-    const statusText = document.getElementById("statusText");
 
     // Open status modal
     statusButton.addEventListener("click", function () 
