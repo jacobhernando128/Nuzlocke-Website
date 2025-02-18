@@ -1,5 +1,7 @@
 let trainer1List, trainer2List ,pairsList, deadEncounterList, encountersDropdown;       //declares encounters, dead encounters,pairs, and any updated game info globally for updating purposes
 
+
+let trainer1Name, trainer2Name;
 let statusButton, statusModal, closeModal, statusText, form;                   //decalres variables for status button functionality
 let currentGameID;
 
@@ -11,8 +13,6 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
     deadEncounterList = document.getElementById("deadEncounterList");
     encountersDropdown = document.getElementById("encountersDropdown");           //references the dropdown container
     encountersDropdown.innerHTML = "";
-    let trainer1Name;
-    let trainer2Name;
 
     try 
     {
@@ -126,7 +126,7 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
             deadEncounterList.innerHTML = "<li>No dead encounters listed.</li>"; 
         }
 
-        function createAddEncounterButton(listElement)                  //creates a create feature for encounters for both trainer lists
+        function createAddEncounterButton(listElement, trainerName)                  //creates a create feature for encounters for both trainer lists
         {
             let addEncounterBox = document.createElement("div");
             addEncounterBox.className = "encounter-box add-encounter";              
@@ -134,15 +134,16 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
         
             addEncounterBox.addEventListener("click", () => 
             {
-                openEncounterCreationForm(); // Call your existing function to add a new encounter
+                document.getElementById("CreateEncounterContainer").style.display = "flex";
+
+                document.getElementById("trainerNameInput").value = trainerName;    
             });
         
             listElement.appendChild(addEncounterBox);
         }
         
-        createAddEncounterButton(trainer1List);
-        createAddEncounterButton(trainer2List);                 //appends add encounter box to each list
-        createAddEncounterButton(deadEncounterList);
+        createAddEncounterButton(trainer1List, trainer1Name);
+        createAddEncounterButton(trainer2List, trainer2Name);                 //appends add encounter box to each list    
     } catch (error) 
     {
         console.error("Error fetching encounters:", error); 
