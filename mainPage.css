@@ -197,6 +197,22 @@ body {
     margin-bottom: 10px;
 }
 
+/* Encounter Creation */
+.add-encounter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;                      
+    cursor: pointer;
+    background-color: #ddd; 
+    border: 2px dashed #555; 
+}
+
+.add-encounter:hover {
+    background-color: #bbb;
+}
+
 /* Dead Encounters Section */
 #deadEncountersSection {
     position: fixed;
