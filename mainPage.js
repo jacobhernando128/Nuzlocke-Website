@@ -1,9 +1,8 @@
-let trainer1List;
-let trainer2List;
-let pairsList;
-let deadEncounterList;       //declares encounter and dead encounters globally for updating purposes
-let encountersDropdown;
+let trainer1List, trainer2List ,pairsList, deadEncounterList, encountersDropdown;       //declares encounters, dead encounters,pairs, and any updated game info globally for updating purposes
+
+let statusButton, statusModal, closeModal, statusText, form;                   //decalres variables for status button functionality
 let currentGameID;
+
 
 async function fetchEncounters(gameID)          //updates the encounters list for the specified game
 {
@@ -248,7 +247,6 @@ async function updateLists(gameID)  //refreshes lists after any updates to the d
     pairsList = document.getElementById("pairsList");       //initializes pairsList for clearing if the challenge is a nuzlocke
     currentGameID = gameID;
 
-    console.log("Starting fetch")
     fetchGameStatus(gameID);                               //updates status button logic for specified game
 
     if (!gameID) 
@@ -693,19 +691,21 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
             trainer2List.innerHTML = "";
             pairsList.innerHTML = "";
             deadEncounterList.innerHTML = ""; 
-            encountersDropdown.innterHTML = "";
+            encountersDropdown.innerHTML = "<p>Select game for encounters</p>";
+
         }
     });
 
     fetchGames();
 });
 
-async function fetchGameStatus(gameID) //fetches and displays current game status
+
+
+async function fetchGameStatus(gameID)                  //fetches and displays current game status
 {
     const changeStatusButton = document.getElementById("changeStatusButton");
     const statusText = document.getElementById("statusText");
 
-    console.log("Here is the fetch gameID:", gameID)
     if (!gameID) 
     {
         statusText.textContent = "Please select a game";
@@ -730,7 +730,6 @@ async function fetchGameStatus(gameID) //fetches and displays current game statu
         }
 
         const data = await response.json();
-        console.log("Fetched Game Status:", data);
 
         if (data.status === "success" && data.game_status) 
         {
@@ -750,6 +749,7 @@ async function fetchGameStatus(gameID) //fetches and displays current game statu
 }
 
 
+
 document.addEventListener("DOMContentLoaded", () =>             // deals with status button functionality
 {
     const statusButton = document.getElementById("statusButton");
@@ -762,7 +762,6 @@ document.addEventListener("DOMContentLoaded", () =>             // deals with st
     {
         event.preventDefault();         //prevents frontend from running before backend is done
 
-        console.log("Inside of changeGameStatus:", currentGameID)
         if (!currentGameID) 
         {
             alert("Please select a game first.");
@@ -799,7 +798,6 @@ document.addEventListener("DOMContentLoaded", () =>             // deals with st
             }
 
             const result = await response.json();
-            console.log("Updated Game Status:", result);
 
             if (result.status === "success") 
             {
