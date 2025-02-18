@@ -694,6 +694,9 @@ document.addEventListener("DOMContentLoaded", function ()               //displa
             deadEncounterList.innerHTML = ""; 
             encountersDropdown.innerHTML = "<p>Select game for encounters</p>";
 
+            document.querySelector("#trainer1Table h2").textContent = `Trainer 1's Encounters`;
+            document.querySelector("#trainer2Table h2").textContent = `Trainer 2's Encounters`;
+
             currentGameID = null;              //if no game is selected, sets currentGameID to nothing
         }
     });
