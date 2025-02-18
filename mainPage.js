@@ -1036,3 +1036,48 @@ window.addEventListener("click", (event) =>                // close modal when c
         document.getElementById("CreateGameContainer").style.display = "none";
     }
 });
+
+
+
+
+// Close Create Encounter modal when clicking the close button
+document.querySelector("#CreateEncounterContainer .close").addEventListener("click", function () 
+{
+    closeCreateEncounterModal();
+});
+
+// Close modal when clicking the "Cancel" button
+document.getElementById("cancelCreateEncounter").addEventListener("click", function () 
+{
+    closeCreateEncounterModal();
+});
+
+// Close modal when clicking outside the form
+document.getElementById("CreateEncounterContainer").addEventListener("click", function (event) 
+{
+    if (event.target === this) 
+    {
+        closeCreateEncounterModal();
+    }
+});
+
+// Function to close the Create Encounter modal and reset button text
+function closeCreateEncounterModal() 
+{
+    document.getElementById("CreateEncounterContainer").style.display = "none";
+}
+
+// Open Create Encounter modal when clicking the button
+document.getElementById("createEncounterButton").addEventListener("click", () => 
+{
+    document.getElementById("CreateEncounterContainer").style.display = "flex"; // Show modal
+});
+
+// Close modal when clicking outside the form
+window.addEventListener("click", (event) => 
+{
+    if (event.target.id === "CreateEncounterContainer") 
+    {
+        closeCreateEncounterModal();
+    }
+});
