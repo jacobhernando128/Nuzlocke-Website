@@ -125,6 +125,24 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
             trainer2List.innerHTML = "<li>No encounters found.</li>";
             deadEncounterList.innerHTML = "<li>No dead encounters listed.</li>"; 
         }
+
+        function createAddEncounterButton(listElement)                  //creates a create feature for encounters for both trainer lists
+        {
+            let addEncounterBox = document.createElement("div");
+            addEncounterBox.className = "encounter-box add-encounter";              
+            addEncounterBox.innerHTML = `<h3>+</h3>`; 
+        
+            addEncounterBox.addEventListener("click", () => 
+            {
+                openEncounterCreationForm(); // Call your existing function to add a new encounter
+            });
+        
+            listElement.appendChild(addEncounterBox);
+        }
+        
+        createAddEncounterButton(trainer1List);
+        createAddEncounterButton(trainer2List);                 //appends add encounter box to each list
+        createAddEncounterButton(deadEncounterList);
     } catch (error) 
     {
         console.error("Error fetching encounters:", error); 
@@ -837,14 +855,11 @@ document.addEventListener("DOMContentLoaded", () =>             // deals with st
 
 
 
-
-
-
 document.getElementById("CreateGameButton").addEventListener("click", function ()           //toggles CreateGame area visibility
 {
     const CreateGameForm = document.getElementById("CreateGameContainer");
 
-    if (CreateGameForm.style.display === "none" || CreateGameForm.style.display === "") 
+    if (CreateGameForm.style.display === "none" || CreateGameForm.style.display === "")         //if the CreateGameForm is displaying, make the button a -
     {
         CreateGameForm.style.display = "block"; 
         this.textContent = "−"; 
@@ -852,7 +867,7 @@ document.getElementById("CreateGameButton").addEventListener("click", function (
     
     else 
     {
-        CreateGameForm.style.display = "none"; 
+        CreateGameForm.style.display = "none";                          //if the CreateGameForm isn't displaying, make the button a +
         this.textContent = "+"; 
     }
 });
@@ -882,6 +897,40 @@ function closeCreateGameModal()             // function to hide modal and reset 
 }
 
 
+
+document.addEventListener("DOMContentLoaded", function () 
+{
+    const createEncounterModal = document.getElementById("CreateEncounterContainer");
+    const createEncounterButton = document.getElementById("createEncounterButton"); // Button that opens the modal
+    const closeEncounterModal = createEncounterModal.querySelector(".close");
+    const cancelCreateEncounter = document.getElementById("cancelCreateEncounter");
+
+    // Show the modal when button is clicked
+    createEncounterButton.addEventListener("click", () => 
+    {
+        createEncounterModal.style.display = "flex";
+    });
+
+    // Close the modal when the close button or cancel is clicked
+    closeEncounterModal.addEventListener("click", () => 
+    {
+        createEncounterModal.style.display = "none";
+    });
+
+    cancelCreateEncounter.addEventListener("click", () => 
+    {
+        createEncounterModal.style.display = "none";
+    });
+
+    // Close modal when clicking outside of content
+    window.addEventListener("click", (event) => 
+    {
+        if (event.target === createEncounterModal) 
+        {
+            createEncounterModal.style.display = "none";
+        }
+    });
+});
 
 
 
