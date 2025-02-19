@@ -125,23 +125,24 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
             trainer2List.innerHTML = "<li>No encounters found.</li>";
             deadEncounterList.innerHTML = "<li>No dead encounters listed.</li>"; 
         }
-
+    
         function createAddEncounterButton(listElement, trainerName)                  //creates a create feature for encounters for both trainer lists
         {
             let addEncounterBox = document.createElement("div");
-            addEncounterBox.className = "encounter-box add-encounter";              
+            addEncounterBox.className = "encounter-box add-encounter";   
+            addEncounterBox.setAttribute("data-trainer", trainerName);           
             addEncounterBox.innerHTML = `<h3>+</h3>`; 
-        
-            addEncounterBox.addEventListener("click", () => 
+
+            addEncounterBox.addEventListener("click", (event) => 
             {
                 document.getElementById("CreateEncounterContainer").style.display = "flex";
 
-                document.getElementById("trainerNameInput").value = trainerName;    
+                const trainerValue = event.currentTarget.getAttribute("data-trainer");
+                document.getElementById("trainerNameInput").value = trainerValue;   
             });
-        
+
             listElement.appendChild(addEncounterBox);
         }
-        
         createAddEncounterButton(trainer1List, trainer1Name);
         createAddEncounterButton(trainer2List, trainer2Name);                 //appends add encounter box to each list    
     } catch (error) 
@@ -150,6 +151,8 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
         alert("Failed to fetch encounters. Please try again later.");               //error if encounters cannot be loaded
     }
 }
+
+
 
 async function fetchPairs(gameID) 
 {
@@ -456,7 +459,7 @@ document.addEventListener("DOMContentLoaded", async() =>            //autofills 
                 alive: aliveValue,
                 location: locationValue,
                 nickname: nicknameValue,
-                trainer_name: trainerValue
+                trainer_input: trainerValue
             };
                 
             try     
@@ -480,7 +483,7 @@ document.addEventListener("DOMContentLoaded", async() =>            //autofills 
                 } 
 
                 else 
-                {o
+                {
                     console.error(result.message);                          //error if unsuccessful post
                     alert(`Error: ${result.message}`);
                 }
