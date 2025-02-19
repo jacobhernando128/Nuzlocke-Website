@@ -172,32 +172,42 @@
         </div>
     </div>
 
-    <h1>Create a new pair</h1>
-
-    <form id="CreatePair">
-        <div>   
-            <label for="firstPair">Enter Encounter 1</label>
-            <input type="number" id="firstPair" required>
+    <div id="CreatePairContainer" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create Pair</h2>
+    
+            <form id="CreatePair">
+                <div>   
+                    <label for="firstPair">Enter Encounter 1</label>
+                    <input type="number" id="firstPair" required>
+                </div>
+    
+                <div>   
+                    <label for="secondPair">Enter Encounter 2</label>
+                    <input type="number" id="secondPair" required>
+                </div>
+    
+                <div>
+                    <label>Rostered?</label>
+    
+                    <label for="rosterYes">
+                        <input type="radio" name="rosterInput" id="rosterYes" value="1" checked> Yes
+                    </label>
+    
+                    <label for="rosterNo">
+                        <input type="radio" name="rosterInput" id="rosterNo" value="0"> No
+                    </label>
+                </div>
+    
+                <div>
+                    <button type="submit" id="createPairButton">Create Pair</button>
+                    <button type="button" id="cancelCreatePair">Cancel</button>
+                </div>
+            </form>
         </div>
-
-        <div>   
-            <label for="secondPair">Enter Encounter 2</label>
-            <input type="number" id="secondPair" required>
-        </div>
-
-        <div>
-            <label for="rosterInput">Rostered?</label>
-
-            <label>Yes</label>
-            <input type="radio" name="rosterInput" value="1" checked>
-
-            <label>No</label>
-            <input type="radio" name="rosterInput" value="0">
-        </div>
-
-        <button type="submit">Create Pair</button>
-
-    </form>
+    </div>
+    
 </body>
 </html>
 
