@@ -12,7 +12,7 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
     trainer2List = document.getElementById("trainer2List")
     deadEncounterList = document.getElementById("deadEncounterList");
     encountersDropdown = document.getElementById("encountersDropdown");           //references the dropdown container
-    encountersDropdown.innerHTML = "";
+    encountersDropdown.innerHTML = "";                                            //clears encounter list 
 
     try 
     {
@@ -74,11 +74,11 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
             data.encounters.forEach(encounter =>                    //formats and appends each encounter to the list
             {
                 let encounterBox = document.createElement("div");
-                encounterBox.className = "encounter-box";
+                encounterBox.className = "encounter-box";                           
                 encounterBox.innerHTML = `
-                    <h3>${encounter.Encounter}</h3>
+                    <h3>${encounter.Encounter}</h3>     
                     <p><strong>Type:</strong> ${encounter.PrimaryType}</p>
-                    <p><strong>Location:</strong> ${encounter.Location}</p>
+                    <p><strong>Location:</strong> ${encounter.Location}</p>                     
                     <p><strong>Caught:</strong> ${encounter.Caught ? "Yes" : "No"}</p>
                     <p><strong>Alive:</strong> ${encounter.Alive ? "Yes" : "No"}</p>
                     <p><strong>Nickname:</strong> ${encounter.Nickname}</p>
@@ -103,7 +103,7 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
                 } 
                 else 
                 {
-                    let deadEncounterBox = document.createElement("div");
+                    let deadEncounterBox = document.createElement("div");           //formatting for dead encounter boxes
                     deadEncounterBox.className = "dead-encounter-box";
                     deadEncounterBox.innerHTML = `
                         <h3>${encounter.Encounter}</h3>
@@ -113,18 +113,12 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
                 }
 
                 let encounterItem = document.createElement("p");
-                encounterItem.textContent = encounter.Encounter;
+                encounterItem.textContent = encounter.Encounter;            //creates element that stores the encounter name
                 encounterItem.className = "dropdown-item";
 
-                encountersDropdown.appendChild(encounterItem);
+                encountersDropdown.appendChild(encounterItem);              //calls encountersDropdown to append to encounters dropdown 
             });
         } 
-        else 
-        {
-            trainer1List.innerHTML = "<li>No encounters found.</li>";
-            trainer2List.innerHTML = "<li>No encounters found.</li>";
-            deadEncounterList.innerHTML = "<li>No dead encounters listed.</li>"; 
-        }
     
         function createAddEncounterButton(listElement, trainerName)                  //creates a create feature for encounters for both trainer lists
         {
@@ -135,13 +129,13 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
 
             addEncounterBox.addEventListener("click", (event) => 
             {
-                document.getElementById("CreateEncounterContainer").style.display = "flex";
+                document.getElementById("CreateEncounterContainer").style.display = "flex";         //updates trainerValue depending on which encounter box is clicked
 
                 const trainerValue = event.currentTarget.getAttribute("data-trainer");
                 document.getElementById("trainerNameInput").value = trainerValue;   
             });
 
-            listElement.appendChild(addEncounterBox);
+            listElement.appendChild(addEncounterBox);               //appends the create encounter box
         }
         createAddEncounterButton(trainer1List, trainer1Name);
         createAddEncounterButton(trainer2List, trainer2Name);                 //appends add encounter box to each list    
@@ -239,7 +233,7 @@ async function fetchPairs(gameID)
                     alert("Failed to fetch second pair's alive value. Please try again later.");
                 }
         
-                let pairBox = document.createElement("div");
+                let pairBox = document.createElement("div");                //code for pair box formatting
                 pairBox.className = "pair-box";
                 pairBox.innerHTML = `
                     <h3>${firstPairName} & ${secondPairName}</h3>
@@ -247,32 +241,33 @@ async function fetchPairs(gameID)
                 `;
 
                 // Add interactivity on click
-                pairBox.addEventListener("click", () => {
+                pairBox.addEventListener("click", () => 
+                {
                     alert(`Pair: ${firstPairName} & ${secondPairName}\nRostered: ${pair.Rostered ? "Yes" : "No"}\nStatus: ${firstPairAlive && secondPairAlive ? "Alive" : "Fainted"}`);
                 });
         
                 if (firstPairAlive == 1 && secondPairAlive == 1) 
                 {
-                    pairsList.appendChild(pairBox);  // Adds to pair list if both encounters are alive
+                    pairsList.appendChild(pairBox);                         // adds to pair list if both encounters are alive
                 } 
             };
         } 
 
         function createAddPairButton(listElement) 
         {
-            let addPairBox = document.createElement("div");
+            let addPairBox = document.createElement("div");             //formats pair boxes
             addPairBox.className = "pair-box add-pair";   
             addPairBox.innerHTML = `<h3>+</h3>`; 
         
             addPairBox.addEventListener("click", () => 
             {
-                document.getElementById("CreatePairContainer").style.display = "flex"; // Show the Create Pair modal
+                document.getElementById("CreatePairContainer").style.display = "flex";     //shows the create pair modal
             });
         
-            listElement.appendChild(addPairBox);
+            listElement.appendChild(addPairBox);                //appends create pair button to pairsList
         }
 
-        createAddPairButton(pairsList);
+        createAddPairButton(pairsList);                 //calls createAddPairButton to append creation box to list
     } catch
     {
         console.error("Error updating pair list:", error);                 //error if form submission occurs
@@ -552,7 +547,7 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         });
 
         const result = await response.json(); 
-        firstPairGame = result.game_id; 
+        firstPairGame = result.game_id;                 //assigns gameID to the first pair
             
     } catch (error) 
     {
@@ -572,7 +567,7 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         });
 
         const result = await response.json(); 
-        secondPairGame = result.game_id; 
+        secondPairGame = result.game_id;                        //assigns gameID to the second pair
             
     } catch (error) 
     {
@@ -592,7 +587,7 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         });
 
         const result = await response.json(); 
-        firstPairType = result.primary_type; 
+        firstPairType = result.primary_type;                //assigns type to the first pair
             
     } catch (error) 
     {
@@ -612,7 +607,7 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         });
 
         const result = await response.json(); 
-        secondPairType = result.primary_type; 
+        secondPairType = result.primary_type;               //assigns type to the second pair
             
     } catch (error) 
     {
@@ -620,9 +615,9 @@ document.getElementById('CreatePair').addEventListener('submit', async (event) =
         alert("Failed to retrieve primary type. Please try again later.");
     }
     
-    if (firstPairGame == secondPairGame)         
+    if (firstPairGame == secondPairGame)                //validates that both encounters exist in the same game
     {
-        if (firstPairType != secondPairType)
+        if (firstPairType != secondPairType)            //validates that both encounters are not the same type
         {
             try     
             {
@@ -758,7 +753,7 @@ async function fetchGameStatus(gameID)                  //fetches and displays c
 
     try 
     {
-        const response = await fetch(`http://localhost:8000/game/status?game_id=${gameID}`, 
+        const response = await fetch(`http://localhost:8000/game/status?game_id=${gameID}`,                 //fetches game status for specific gameID
         {
             method: "GET",
             headers: 
@@ -777,11 +772,11 @@ async function fetchGameStatus(gameID)                  //fetches and displays c
         if (data.status === "success" && data.game_status) 
         {
             statusText.textContent = data.game_status;
-            changeStatusButton.style.display = "block"; // Show the button if a game is selected
+            changeStatusButton.style.display = "block";                 //shows the button if a game is selected
         } 
         else 
         {
-            statusText.textContent = "Status unavailable";
+            statusText.textContent = "Status unavailable";              //shows an error if data is incorrectly fetched and stored
             changeStatusButton.style.display = "none";
         }
     } catch (error) 
@@ -793,35 +788,23 @@ async function fetchGameStatus(gameID)                  //fetches and displays c
 
 
 
-document.addEventListener("DOMContentLoaded", () =>             // deals with status button functionality
-{
+document.addEventListener("DOMContentLoaded", () =>             //handles status button behavior for HTML
+{             
     const statusButton = document.getElementById("statusButton");
-    const statusModal = document.getElementById("statusModal");
-    const closeModal = document.querySelector(".close");                //define button elements
+    const statusModal = document.getElementById("statusModal");                 //initializes modal variables
+    const closeButton = document.querySelector("#statusModal .close"); 
     const statusText = document.getElementById("statusText");
     const form = document.getElementById("statusForm");
 
     async function changeGameStatus(event) 
     {
-        event.preventDefault();         //prevents frontend from running before backend is done
+        event.preventDefault();                 //prevents frontend from running before backend is done
 
-        if (!currentGameID) 
-        {
-            alert("Please select a game first.");
-            return;
-        }
-
-        const selectedStatus = document.querySelector('input[name="gameStatus"]:checked'); // Read selected status from the radio input
-
-        if (!selectedStatus) 
-        {
-            alert("Please select a status.");
-            return;
-        }
+        const selectedStatus = document.querySelector('input[name="gameStatus"]:checked');              //read selected status from radio input
 
         try 
         {
-            const response = await fetch(`http://localhost:8000/games/update-status`, 
+            const response = await fetch(`http://localhost:8000/games/update-status`,           //updates game status for specified gameID
             {
                 method: "PUT", 
                 headers: 
@@ -831,7 +814,7 @@ document.addEventListener("DOMContentLoaded", () =>             // deals with st
                 body: JSON.stringify(
                 {
                     game_id: currentGameID,
-                    status: selectedStatus.value  // Get the value from the selected radio input
+                    status: selectedStatus.value                    //gets the value from the selected radio input
                 })
             });
 
@@ -844,143 +827,179 @@ document.addEventListener("DOMContentLoaded", () =>             // deals with st
 
             if (result.status === "success") 
             {
-                statusText.textContent = selectedStatus.value; // Update displayed status
+                statusText.textContent = selectedStatus.value;              //updates displayed status if update is a success
             } 
             else 
             {
-                alert("Failed to update status.");
+                alert("Failed to update status.");          //error if update fails
             }
-        } catch (error) {
+        } 
+        catch (error) 
+        {
             console.error("Error updating game status:", error);
             alert("Error updating game status.");
         }
     }
 
-    // Show modal on button click
     statusButton.addEventListener("click", () =>    
     {
-        statusModal.style.display = "flex";
-        fetchGameStatus(currentGameID);
+        if (!currentGameID) 
+        {
+            alert("Please select a game first.");               //alerts user to select a game before checking/altering status
+            return;
+        }
+
+        statusModal.style.display = "flex";                     //shows status modal on click
+        fetchGameStatus(currentGameID);                         //fetches game status when modal is opened
     });
 
-    // Close modal
-    closeModal.addEventListener("click", () => 
+    closeButton.addEventListener("click", () =>                 //closes modal when X is clicked          
     {
         statusModal.style.display = "none";
     });
 
-    // Change status on button click
-    form.addEventListener("submit", changeGameStatus);
-});
-
-
-
-document.getElementById("CreateGameButton").addEventListener("click", function ()           //toggles CreateGame area visibility
-{
-    const CreateGameForm = document.getElementById("CreateGameContainer");
-
-    if (CreateGameForm.style.display === "none" || CreateGameForm.style.display === "")         //if the CreateGameForm is displaying, make the button a -
+    window.addEventListener("click", (event) =>                 //closes modal if area around modal is clicked
     {
-        CreateGameForm.style.display = "block"; 
-        this.textContent = "−"; 
-    } 
-    
-    else 
-    {
-        CreateGameForm.style.display = "none";                          //if the CreateGameForm isn't displaying, make the button a +
-        this.textContent = "+"; 
-    }
-});
-
-document.querySelector("#CreateGameContainer .close").addEventListener("click", function ()     // close the modal when clicking the close button
-{
-    closeCreateGameModal();
-});
-
-document.getElementById("cancelCreateGame").addEventListener("click", function ()   // close modal when clicking the "Cancel" button
-{
-    closeCreateGameModal();
-});
-
-document.getElementById("CreateGameContainer").addEventListener("click", function (event)       // ensures it only triggers when clicking on the background
-{
-    if (event.target === this) 
-    {  
-        closeCreateGameModal();
-    } 
-});
-
-function closeCreateGameModal()             // function to hide modal and reset button text
-{                       
-    document.getElementById("CreateGameContainer").style.display = "none";
-    document.getElementById("CreateGameButton").textContent = "+"; // Reset button text
-}
-
-
-
-document.addEventListener("DOMContentLoaded", function () 
-{
-    const createEncounterModal = document.getElementById("CreateEncounterContainer");
-    const createEncounterButton = document.getElementById("createEncounterButton"); // Button that opens the modal
-    const closeEncounterModal = createEncounterModal.querySelector(".close");
-    const cancelCreateEncounter = document.getElementById("cancelCreateEncounter");
-
-    // Show the modal when button is clicked
-    createEncounterButton.addEventListener("click", () => 
-    {
-        createEncounterModal.style.display = "flex";
-    });
-
-    // Close the modal when the close button or cancel is clicked
-    closeEncounterModal.addEventListener("click", () => 
-    {
-        createEncounterModal.style.display = "none";
-    });
-
-    cancelCreateEncounter.addEventListener("click", () => 
-    {
-        createEncounterModal.style.display = "none";
-    });
-
-    // Close modal when clicking outside of content
-    window.addEventListener("click", (event) => 
-    {
-        if (event.target === createEncounterModal) 
+        if (event.target === statusModal) 
         {
-            createEncounterModal.style.display = "none";
+            statusModal.style.display = "none";
+        }
+    });
+
+    form.addEventListener("submit", changeGameStatus);          //game status is updated once form is submitted
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function ()               //handles create game button functionality
+{
+    const createGameModal = document.getElementById("CreateGameContainer");             //initializes modal varaibles
+    const createGameButton = document.getElementById("CreateGameButton"); 
+    const closeGameModal = document.querySelector("#CreateGameContainer .close"); 
+    const cancelCreateGame = document.getElementById("cancelCreateGame");
+
+    function toggleCreateGameModal()                        //toggles modal visibility
+    {
+        if (createGameModal.style.display === "none" || createGameModal.style.display === "") 
+        {
+            createGameModal.style.display = "flex";                                     //if modal is closed, open modal and deals with button display
+            createGameButton.textContent = "−";  // Change button to "−"            
+        } 
+        
+        else 
+        {   
+            closeCreateGameModal();             //if modal is open, call function to close modal
+        }
+    }
+
+    function closeCreateGameModal() 
+    {
+        createGameModal.style.display = "none";                         //function that deals with close modal functionality and button display
+        createGameButton.textContent = "+"; 
+    }
+
+    createGameButton.addEventListener("click", toggleCreateGameModal);          //when create game button is clicked, call function to toggle modal visibility
+
+    closeGameModal.addEventListener("click", closeCreateGameModal);             //closes modal if X is clicked
+    cancelCreateGame.addEventListener("click", closeCreateGameModal);           //closes modal if "cancel" is clicked
+
+    createGameModal.addEventListener("click", (event) =>                        //closes modal if area outside of modal is clicked
+    {
+        if (event.target === createGameModal) 
+        {
+            closeCreateGameModal();
         }
     });
 });
 
 
 
-// handles info button behavior for HTML
-document.getElementById("infoButton").addEventListener("click", function () 
+document.addEventListener("DOMContentLoaded", function ()           // handles encounter modal functionality
 {
-    document.getElementById("infoModal").style.display = "flex";
-});
+    const createEncounterModal = document.getElementById("CreateEncounterContainer");
+    const createEncounterButton = document.getElementById("createEncounterButton");                 //initializes modal varaibles
+    const closeEncounterModal = document.querySelector("#CreateEncounterContainer .close"); 
+    const cancelCreateEncounter = document.getElementById("cancelCreateEncounter");
 
-// Close modal when clicking the close button
-document.querySelector("#infoModal .close").addEventListener("click", function () 
-{
-    closeInfoModal();
-});
-
-// Close modal when clicking outside the modal content
-document.getElementById("infoModal").addEventListener("click", function (event) 
-{
-    if (event.target === this) 
+    function closeCreateEncounterModal() 
     {
-        closeInfoModal();
+        createEncounterModal.style.display = "none";                //closes modal when called
     }
+
+    createEncounterButton.addEventListener("click", () => 
+    {
+        createEncounterModal.style.display = "flex";                //when create encounter button is clicked, open modal
+    });
+
+    // Close modal when clicking close button or cancel
+    closeEncounterModal.addEventListener("click", closeCreateEncounterModal);               //closes modal if X is clicked
+    cancelCreateEncounter.addEventListener("click", closeCreateEncounterModal);             //closes modal if "cancel" is clicked
+
+    createEncounterModal.addEventListener("click", (event) =>                               //closes modal if area outside of modal is clicked
+    {
+        if (event.target === createEncounterModal) 
+        {
+            closeCreateEncounterModal();
+        }
+    });
 });
 
-// Function to close the info modal
-function closeInfoModal() 
-{
-    document.getElementById("infoModal").style.display = "none";
-}
 
+
+document.addEventListener("DOMContentLoaded", function ()                  //handles pair modal functionality
+{
+    const createPairModal = document.getElementById("CreatePairContainer");
+    const createPairButton = document.getElementById("createPairButton");               //initializes modal varaibles
+    const closePairModal = document.querySelector("#CreatePairContainer .close"); 
+    const cancelCreatePair = document.getElementById("cancelCreatePair");
+
+    function closeCreatePairModal() 
+    {
+        createPairModal.style.display = "none";             //closes modal when called
+    }
+
+    // Show modal when clicking the "Create Pair" button
+    createPairButton.addEventListener("click", () => 
+    {
+        createPairModal.style.display = "flex";             //when create pair button is clicked, open modal
+    });
+
+    // Close modal when clicking close button or cancel
+    closePairModal.addEventListener("click", closeCreatePairModal);             //closes modal if X is clicked
+    cancelCreatePair.addEventListener("click", closeCreatePairModal);           //closes modal if "cancel" is clicked
+
+    createPairModal.addEventListener("click", (event) =>                        //closes modal if area around modal is clicked
+    {
+        if (event.target === createPairModal) 
+        {
+            closeCreatePairModal();
+        }
+    });
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function ()       //handles info modal functionality
+{
+    const infoModal = document.getElementById("infoModal");
+    const infoButton = document.getElementById("infoButton");               //initializes modal variables
+    const closeInfoButton = document.querySelector("#infoModal .close");
+
+    function closeInfoModal() 
+    {
+        infoModal.style.display = "none";               //close modal when called
+    }
+
+    infoButton.addEventListener("click", () => infoModal.style.display = "flex");           //when info button is clicked, open modal
+
+    // Close modal when clicking the close button
+    closeInfoButton.addEventListener("click", closeInfoModal);          //closes modal when X is clicked
+
+    infoModal.addEventListener("click", (event) =>                      //closes modal if area around modal is clicked
+    {
+        if (event.target === infoModal) closeInfoModal();
+    });
+});
 
 
 
@@ -990,113 +1009,10 @@ document.getElementById("encountersButton").addEventListener("click", function (
     dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
 });
 
-// Close dropdown when clicking outside
-window.addEventListener("click", function (event) 
+window.addEventListener("click", function (event)                   //closes modal if area around modal is clicked
 {
     if (!event.target.matches("#encountersButton")) 
     {
         document.getElementById("encountersDropdown").style.display = "none";
-    }
-});
-
-
-
-document.addEventListener("DOMContentLoaded", function ()   //handles status button behavior for HTML
-{             
-    const statusButton = document.getElementById("statusButton");
-    const statusModal = document.getElementById("statusModal");
-    const closeButton = document.querySelector("#statusModal .close");
-
-    // Open status modal
-    statusButton.addEventListener("click", function () 
-    {
-        statusModal.style.display = "flex";
-    });
-
-    statusModal.style.display = "none";
-
-    // Show modal on button click
-    statusButton.addEventListener("click", function () {
-        statusModal.style.display = "flex";
-    });
-
-    // Close modal when clicking the close button
-    closeButton.addEventListener("click", function () {
-        statusModal.style.display = "none";
-    });
-
-    // Close modal if clicking outside of it
-    window.addEventListener("click", function (event) {
-        if (event.target === statusModal) {
-            statusModal.style.display = "none";
-        }
-    });
-});
-
-
-
-
-
-document.getElementById("CreateGameButton").addEventListener("click", () =>                //create game button functionality
-{
-    document.getElementById("CreateGameContainer").style.display = "flex";              // Show modal
-});
-
-document.getElementById("cancelCreateGame").addEventListener("click", () => 
-{
-    document.getElementById("CreateGameContainer").style.display = "none";              // Hide modal
-});
-
-
-window.addEventListener("click", (event) =>                // close modal when clicking outside the form
-{
-    if (event.target.id === "CreateGameContainer")
-    {
-        document.getElementById("CreateGameContainer").style.display = "none";
-    }
-});
-
-
-
-
-// Close Create Encounter modal when clicking the close button
-document.querySelector("#CreateEncounterContainer .close").addEventListener("click", function () 
-{
-    closeCreateEncounterModal();
-});
-
-// Close modal when clicking the "Cancel" button
-document.getElementById("cancelCreateEncounter").addEventListener("click", function () 
-{
-    closeCreateEncounterModal();
-});
-
-// Close modal when clicking outside the form
-document.getElementById("CreateEncounterContainer").addEventListener("click", function (event) 
-{
-    if (event.target === this) 
-    {
-        closeCreateEncounterModal();
-    }
-});
-
-// Function to close the Create Encounter modal and reset button text
-function closeCreateEncounterModal() 
-{
-    document.getElementById("CreateEncounterContainer").style.display = "none";
-}
-
-// Open Create Encounter modal when clicking the button
-document.getElementById("createEncounterButton").addEventListener("click", () => 
-{
-    document.getElementById("CreateEncounterContainer").style.display = "flex"; // Show modal
-});
-
-// Close modal when clicking outside the form
-window.addEventListener("click", (event) => 
-{
-    if (event.target.id === "CreateEncounterContainer") 
-    {
-        closeCreateEncounterModal();
     }
 });
