@@ -257,6 +257,22 @@ async function fetchPairs(gameID)
                 } 
             };
         } 
+
+        function createAddPairButton(listElement) 
+        {
+            let addPairBox = document.createElement("div");
+            addPairBox.className = "pair-box add-pair";   
+            addPairBox.innerHTML = `<h3>+</h3>`; 
+        
+            addPairBox.addEventListener("click", () => 
+            {
+                document.getElementById("CreatePairContainer").style.display = "flex"; // Show the Create Pair modal
+            });
+        
+            listElement.appendChild(addPairBox);
+        }
+
+        createAddPairButton(pairsList);
     } catch
     {
         console.error("Error updating pair list:", error);                 //error if form submission occurs
