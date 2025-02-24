@@ -1050,6 +1050,32 @@ document.addEventListener("DOMContentLoaded", function ()                  //han
 
 
 
+document.addEventListener("DOMContentLoaded", function ()           //handles pair management menu button functionality
+{
+    const pairManagementModal = document.getElementById("pairManagementModal");
+    const managePairButton = document.getElementById("managePairButton"); 
+    const closePairModal = document.getElementById("closePairModal"); 
+
+    function closePairManagementModal() 
+    {
+        pairManagementModal.style.display = "none"; 
+    }
+
+    managePairButton.addEventListener("click", () => 
+    {
+        pairManagementModal.style.display = "flex";             //when manage pairs button is clicked, open modal
+    });
+
+    closePairModal.addEventListener("click", closePairManagementModal);             //close modal if X is clicked
+
+    pairManagementModal.addEventListener("click", (event) => 
+    {
+        if (event.target === pairManagementModal) {
+            closePairManagementModal();                             //closes modal if area around modal is clicked
+        }
+    });
+});
+
 document.addEventListener("DOMContentLoaded", function ()       //handles info modal functionality
 {
     const infoModal = document.getElementById("infoModal");
