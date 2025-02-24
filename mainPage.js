@@ -16,7 +16,7 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
 
     try 
     {
-        const response = await fetch(`http://localhost:8000/encounters?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
+        const response = await fetch(`http://localhost:8000/encounters?game_id=${gameID}`,            //fetches encounters and pairs for specified game
         {
             method: "GET",
             headers: 
@@ -35,7 +35,7 @@ async function fetchEncounters(gameID)          //updates the encounters list fo
 
         try 
         {
-            const response = await fetch(`http://localhost:8000/trainers?game_id=${gameID}`,            //fetches trainer names for specefied game
+            const response = await fetch(`http://localhost:8000/trainers?game_id=${gameID}`,            //fetches trainer names for specified game
             {
                 method: "GET",
                 headers: 
@@ -156,9 +156,12 @@ async function fetchPairs(gameID)
     let secondPairName;
     pairsList = document.getElementById("pairsList");               //links to the pairsList HTML
 
+    const rosteredPairsList = document.getElementById("rosteredPairsList");
+    const unrosteredPairsList = document.getElementById("unrosteredPairsList");             //defines lists for managing encounters
+
     try 
     {
-        const response = await fetch(`http://localhost:8000/pairs?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
+        const response = await fetch(`http://localhost:8000/pairs?game_id=${gameID}`,            //fetches encounters and pairs for specified game
         {
             method: "GET",
             headers: 
@@ -176,6 +179,8 @@ async function fetchPairs(gameID)
         console.log("Fetched Pairs:", data);
 
         pairsList.innerHTML = ""            //clears lists before posting new encounters
+        rosteredPairsList.innerHTML = "";
+        unrosteredPairsList.innerHTML = "";
 
         if (data.status === "success" && Array.isArray(data.pairs) && data.pairs.length > 0)            //if the data is correctly defined and contains encounters
         {
@@ -183,7 +188,7 @@ async function fetchPairs(gameID)
             {
                 try 
                 {
-                    const response = await fetch(`http://localhost:8000/encounter/alive?encounter_id=${pair.FirstPair}`,            //fetches encounters and pairs for specefied game
+                    const response = await fetch(`http://localhost:8000/encounter/alive?encounter_id=${pair.FirstPair}`,            //fetches encounters and pairs for specified game
                     {
                         method: "GET",
                         headers: 
@@ -209,7 +214,7 @@ async function fetchPairs(gameID)
                 
                 try 
                 {
-                    const response = await fetch(`http://localhost:8000/encounter/alive?encounter_id=${pair.SecondPair}`,            //fetches encounters and pairs for specefied game
+                    const response = await fetch(`http://localhost:8000/encounter/alive?encounter_id=${pair.SecondPair}`,            //fetches encounters and pairs for specified game
                     {
                         method: "GET",
                         headers: 
@@ -233,22 +238,32 @@ async function fetchPairs(gameID)
                     alert("Failed to fetch second pair's alive value. Please try again later.");
                 }
         
-                let pairBox = document.createElement("div");                //code for pair box formatting
+                let pairBox = document.createElement("div");                //code for front page pair box formatting
                 pairBox.className = "pair-box";
-                pairBox.innerHTML = `
-                    <h3>${firstPairName} & ${secondPairName}</h3>
-                    <p><strong>Rostered:</strong> ${pair.Rostered ? "Yes" : "No"}</p>
-                `;
+                pairBox.innerHTML = `<h3>${firstPairName} & ${secondPairName}</h3>`;
 
-                // Add interactivity on click
                 pairBox.addEventListener("click", () => 
                 {
                     alert(`Pair: ${firstPairName} & ${secondPairName}\nRostered: ${pair.Rostered ? "Yes" : "No"}\nStatus: ${firstPairAlive && secondPairAlive ? "Alive" : "Fainted"}`);
                 });
         
-                if (firstPairAlive == 1 && secondPairAlive == 1) 
+                if (firstPairAlive == 1 && secondPairAlive == 1)                //only appends encounters to lists if both encounters are alive        
                 {
-                    pairsList.appendChild(pairBox);                         // adds to pair list if both encounters are alive
+                    let newPairBox = document.createElement("div");                //code for manage menu pair box formatting
+                    newPairBox.className = "pair-box";
+                    newPairBox.innerHTML = `
+                    <h3>${firstPairName} & ${secondPairName}</h3>
+                    <p><strong>Rostered:</strong> ${pair.Rostered ? "Yes" : "No"}</p>
+                `;
+                    if (pair.Rostered)
+                    {
+                        pairsList.appendChild(pairBox);                     //adds rostered encounter to front page pairs list as well as rostered list in manage menu
+                        rosteredPairsList.appendChild(newPairBox);
+                    }
+                    else
+                    {
+                        unrosteredPairsList.appendChild(newPairBox);        //adds unrosted encounter to the manage menu
+                    }
                 } 
             };
         } 
@@ -292,7 +307,7 @@ async function updateLists(gameID)  //refreshes lists after any updates to the d
 
     try 
     {
-        const response = await fetch(`http://localhost:8000/game/challenge-type?game_id=${gameID}`,            //fetches encounters and pairs for specefied game
+        const response = await fetch(`http://localhost:8000/game/challenge-type?game_id=${gameID}`,            //fetches encounters and pairs for specified game
         {
             method: "GET",
             headers: 
@@ -525,7 +540,7 @@ async function updatePairEncounters()
     
     try 
     {
-        const response = await fetch(`http://localhost:8000/encounters?game_id=${currentGameID}`,                 //fetches encounters for specefied gameID      
+        const response = await fetch(`http://localhost:8000/encounters?game_id=${currentGameID}`,                 //fetches encounters for specified gameID      
         {
             method: "GET",
             headers: 
@@ -545,7 +560,7 @@ async function updatePairEncounters()
 
     try 
     {
-        const response = await fetch(`http://localhost:8000/pairs?game_id=${currentGameID}`,                    //fetches pairs for specefied gameID 
+        const response = await fetch(`http://localhost:8000/pairs?game_id=${currentGameID}`,                    //fetches pairs for specified gameID 
         {
             method: "GET",
             headers: 
