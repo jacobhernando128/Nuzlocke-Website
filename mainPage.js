@@ -262,6 +262,8 @@ async function fetchPairs(gameID)
             addPairBox.addEventListener("click", () => 
             {
                 document.getElementById("CreatePairContainer").style.display = "flex";     //shows the create pair modal
+                
+                updatePairEncounters();
             });
         
             listElement.appendChild(addPairBox);                //appends create pair button to pairsList
@@ -513,7 +515,79 @@ document.addEventListener("DOMContentLoaded", async() =>            //autofills 
     });
 });
 
+async function updatePairEncounters()
+{
+    const encountersT1 = document.getElementById("firstPair");
+    const encountersT2 = document.getElementById("secondPair");
 
+    let encountersList = [];                    
+    let pairedEncountersList = [];          //initializes array for pair and encounter logic
+    
+    try 
+    {
+        const response = await fetch(`http://localhost:8000/encounters?game_id=${currentGameID}`,                 //fetches encounters for specefied gameID      
+        {
+            method: "GET",
+            headers: 
+            {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await response.json(); 
+        encountersList = data.encounters;               //stores fetched data into encounters
+            
+    } catch (error) 
+    {
+        console.error("Error fetching encounters:", error); 
+        alert("Failed to retrieve encounters. Please try again later.");
+    }
+
+    try 
+    {
+        const response = await fetch(`http://localhost:8000/pairs?game_id=${currentGameID}`,                    //fetches pairs for specefied gameID 
+        {
+            method: "GET",
+            headers: 
+            {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await response.json(); 
+        pairedEncountersList = data.pairs;          //stores fetched data into pairedEncounters
+            
+    } catch (error) 
+    {
+        console.error("Error fetching encounters:", error); 
+        alert("Failed to retrieve encounters. Please try again later.");
+    }
+
+    encountersT1.innerHTML = '<option value="" disabled selected>Select an Encounter</option>';             //clears list before updating
+    encountersT2.innerHTML = '<option value="" disabled selected>Select an Encounter</option>';
+
+    encountersList.forEach(pokemon =>                  //autofills pokemon data 
+    {
+        if((!pairedEncountersList.some(pair => Number(pair.FirstPair) === pokemon.EncounterID || Number(pair.SecondPair) === pokemon.EncounterID)) && pokemon.Alive)
+        {
+            let option = document.createElement("option");
+            option.value = pokemon.EncounterID;                 //stores EncounterID as the value
+            option.textContent = pokemon.Encounter;             //displays the encounters name as an option
+
+            console.log("TrainerInput:", pokemon.TrainerInput, "| Trainer1:", trainer1Name, "| Trainer2:", trainer2Name);
+            console.log(pokemon);
+
+            if(pokemon.TrainerInput?.trim().toLowerCase() === trainer1Name?.trim().toLowerCase())
+            {
+                encountersT1.appendChild(option);
+            }
+            else if(pokemon.TrainerInput?.trim().toLowerCase() === trainer2Name?.trim().toLowerCase())
+            {
+                encountersT2.appendChild(option);
+            }
+        }
+    });
+}
 
 document.getElementById('CreatePair').addEventListener('submit', async (event) =>       //creates pair and posts to backend
 {
@@ -931,7 +1005,6 @@ document.addEventListener("DOMContentLoaded", function ()           // handles e
         createEncounterModal.style.display = "flex";                //when create encounter button is clicked, open modal
     });
 
-    // Close modal when clicking close button or cancel
     closeEncounterModal.addEventListener("click", closeCreateEncounterModal);               //closes modal if X is clicked
     cancelCreateEncounter.addEventListener("click", closeCreateEncounterModal);             //closes modal if "cancel" is clicked
 
@@ -958,13 +1031,11 @@ document.addEventListener("DOMContentLoaded", function ()                  //han
         createPairModal.style.display = "none";             //closes modal when called
     }
 
-    // Show modal when clicking the "Create Pair" button
     createPairButton.addEventListener("click", () => 
     {
-        createPairModal.style.display = "flex";             //when create pair button is clicked, open modal
+        createPairModal.style.display = "flex";             //when create pair button is clicked, open modal 
     });
 
-    // Close modal when clicking close button or cancel
     closePairModal.addEventListener("click", closeCreatePairModal);             //closes modal if X is clicked
     cancelCreatePair.addEventListener("click", closeCreatePairModal);           //closes modal if "cancel" is clicked
 
@@ -992,7 +1063,6 @@ document.addEventListener("DOMContentLoaded", function ()       //handles info m
 
     infoButton.addEventListener("click", () => infoModal.style.display = "flex");           //when info button is clicked, open modal
 
-    // Close modal when clicking the close button
     closeInfoButton.addEventListener("click", closeInfoModal);          //closes modal when X is clicked
 
     infoModal.addEventListener("click", (event) =>                      //closes modal if area around modal is clicked
