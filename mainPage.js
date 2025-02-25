@@ -253,6 +253,7 @@ async function fetchPairs(gameID)
                 {
                     let newPairBox = document.createElement("div");                //code for manage menu pair box formatting
                     newPairBox.className = "pair-box";
+                    newPairBox.setAttribute("data-pair-id", pair.PairID);
                     newPairBox.innerHTML = `
                     <h3>${firstPairName} & ${secondPairName}</h3>
                     <p><strong>Rostered:</strong> ${pair.Rostered ? "Yes" : "No"}</p>
@@ -879,6 +880,76 @@ async function fetchGameStatus(gameID)                  //fetches and displays c
 
 
 
+document.addEventListener("DOMContentLoaded", function ()               //handles pair menu logic
+{
+    const pairOptionsModal = document.getElementById("pairOptionsModal");
+    const closePairOptionsModal = document.getElementById("closePairOptionsModal");
+    const deletePairButton = document.getElementById("deletePairButton");               //initializes modal variables
+    const toggleRosterButton = document.getElementById("toggleRosterButton");
+    const pairOptionsTitle = document.getElementById("pairOptionsTitle");
+    const statusText = document.getElementById("modalPairStatus");
+
+    rosteredPairsList = document.getElementById("rosteredPairsList");               //declares both pairs lists
+    unrosteredPairsList = document.getElementById("unrosteredPairsList");
+
+    let selectedPair = null; 
+
+    function closePairOptions() 
+    {
+        pairOptionsModal.style.display = "none";
+        selectedPair = null;
+    }
+
+    async function loadPairInfo(event) 
+    {
+        const pairBox = event.target.closest(".pair-box");
+        if (!pairBox) return;
+
+        const pairID = pairBox.getAttribute("data-pair-id");              //grabs pair name as well as ID
+        const pairName = pairBox.querySelector("h3").innerText;
+
+        console.log("Pair ID:", pairID);
+        try 
+        {
+            const response = await fetch(`http://localhost:8000/pair/info?pair_id=${pairID}`,                 //fetches pair info from pairID
+            {
+                method: "GET",
+                headers: 
+                {
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if (!response.ok) 
+            {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(data);
+            selectedPair = data;
+        } catch (error) 
+        {
+            console.error("Error fetching pair info:", error);
+        }
+
+        pairOptionsTitle.innerText = pairName;
+        if (selectedPair.Rostered == 1)
+        {
+            statusText.innerHTML = "Rostered"
+        }
+        else
+        {
+            statusText.innerHTML = "Unrostored"
+        }
+    }
+
+    rosteredPairsList.addEventListener("click", loadPairInfo);
+    unrosteredPairsList.addEventListener("click", loadPairInfo);
+});
+
+
+
 document.addEventListener("DOMContentLoaded", () =>             //handles status button behavior for HTML
 {             
     const statusButton = document.getElementById("statusButton");
@@ -1087,7 +1158,8 @@ document.addEventListener("DOMContentLoaded", function ()           //handles pa
 
     pairManagementModal.addEventListener("click", (event) => 
     {
-        if (event.target === pairManagementModal) {
+        if (event.target === pairManagementModal) 
+        {
             closePairManagementModal();                             //closes modal if area around modal is clicked
         }
     });
