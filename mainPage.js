@@ -5,6 +5,8 @@ let trainer1Name, trainer2Name;
 let statusButton, statusModal, closeModal, statusText, form;                   //decalres variables for status button functionality
 let currentGameID;
 
+let rosteredPairsList, unrosteredPairsList;
+
 
 async function fetchEncounters(gameID)          //updates the encounters list for the specified game
 {
@@ -1090,6 +1092,44 @@ document.addEventListener("DOMContentLoaded", function ()           //handles pa
         }
     });
 });
+
+
+
+document.addEventListener("DOMContentLoaded", function ()               //handles specific pair options menu functionality
+{
+    const pairOptionsModal = document.getElementById("pairOptionsModal");
+    const closePairOptionsModal = document.getElementById("closePairOptionsModal");
+    rosteredPairsList = document.getElementById("rosteredPairsList");
+    unrosteredPairsList = document.getElementById("unrosteredPairsList");
+
+    function closePairOptions() 
+    {
+        pairOptionsModal.style.display = "none";                //closes pair options modal
+    }
+
+    function handlePairClick(event) 
+    {
+        const pairBox = event.target.closest(".pair-box");
+        if (!pairBox) 
+            return;                                                     //ignores clicks outside of pair boxes
+
+        pairOptionsModal.style.display = "flex";                        //opens modal when a pair is clicked
+    }
+
+    rosteredPairsList.addEventListener("click", handlePairClick);
+    unrosteredPairsList.addEventListener("click", handlePairClick);         //calls handlePairClick on pair box clicks
+
+    closePairOptionsModal.addEventListener("click", closePairOptions);      //close modal if X is clicked
+
+    pairOptionsModal.addEventListener("click", (event) => 
+    {
+        if (event.target === pairOptionsModal) 
+        {
+            closePairOptions();                 //closes modal if area around modal is clicked
+        }
+    });
+});
+
 
 document.addEventListener("DOMContentLoaded", function ()       //handles info modal functionality
 {
