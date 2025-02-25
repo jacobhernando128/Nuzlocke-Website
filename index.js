@@ -872,6 +872,56 @@ app.put("/games/update-status", (req, res, next) => // Updates game status in tb
 });
 
 
+
+app.get("/pair/info", (req, res, next) => // Gets all information for a specific pair  
+{  
+    let pairID = req.query.pair_id;
+
+    if (!pairID) 
+    {
+        return res.status(400).json({ status: "error", message: "pair_id is required" });
+    }
+
+    let strCommand = `
+        SELECT PairID, FirstPair, SecondPair, Rostered 
+        FROM tblPairs 
+        WHERE PairID = ?`;
+
+    ConNuzlocke.getConnection((err, connection) => 
+    {
+        if (err) 
+        {
+            console.error("Database Connection Error:", err);
+            return res.status(500).json({ status: "error", message: "Database connection failed" });
+        }
+
+        connection.query(strCommand, [pairID], (err, result) => 
+        {
+            connection.release(); 
+
+            if (err) 
+            {
+                console.error("Query Error:", err);
+                return res.status(500).json({ status: "error", message: "Query execution failed" });
+            }
+
+            if (result.length > 0) 
+            {
+                return res.status(200).json({ 
+                    status: "success", 
+                    pair_info: result[0] 
+                });
+            } 
+            else 
+            {
+                return res.status(404).json({ status: "error", message: "Pair not found" });
+            }
+        });
+    });
+});
+
+
+
 app.listen(HTTP_PORT, () => {
     console.log(`Server is running on port ${HTTP_PORT}`);
 });
