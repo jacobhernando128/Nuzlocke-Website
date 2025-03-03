@@ -899,16 +899,11 @@ document.addEventListener("DOMContentLoaded", function ()               //handle
         pairOptionsModal.style.display = "none";
         selectedPair = null;
     }
+    let selectedPair = null;                    //initializes selectedPair to null
 
     async function loadPairInfo(event) 
+    async function fetchPairInfo(pairID)        //fetches pair info from pairID
     {
-        const pairBox = event.target.closest(".pair-box");
-        if (!pairBox) return;
-
-        const pairID = pairBox.getAttribute("data-pair-id");              //grabs pair name as well as ID
-        const pairName = pairBox.querySelector("h3").innerText;
-
-        console.log("Pair ID:", pairID);
         try 
         {
             const response = await fetch(`http://localhost:8000/pair/info?pair_id=${pairID}`,                 //fetches pair info from pairID
@@ -925,9 +920,12 @@ document.addEventListener("DOMContentLoaded", function ()               //handle
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            const data = await response.json();
-            console.log(data);
-            selectedPair = data;
+            return await response.json();
+        } catch (error) 
+        {
+            console.error("Error fetching pair info:", error);
+        }
+    }
         } catch (error) 
         {
             console.error("Error fetching pair info:", error);
