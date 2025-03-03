@@ -3,7 +3,7 @@ let trainer1List, trainer2List ,pairsList, deadEncounterList, encountersDropdown
 
 let trainer1Name, trainer2Name;
 let statusButton, statusModal, closeModal, statusText, form;                   //decalres variables for status button functionality
-let currentGameID;
+let currentGameID, selectedPair
 
 let rosteredPairsList, unrosteredPairsList;
 
@@ -882,26 +882,19 @@ async function fetchGameStatus(gameID)                  //fetches and displays c
 
 document.addEventListener("DOMContentLoaded", function ()               //handles pair menu logic
 {
-    const pairOptionsModal = document.getElementById("pairOptionsModal");
-    const closePairOptionsModal = document.getElementById("closePairOptionsModal");
-    const deletePairButton = document.getElementById("deletePairButton");               //initializes modal variables
+    const deletePairButton = document.getElementById("deletePairButton");               
     const toggleRosterButton = document.getElementById("toggleRosterButton");
-    const pairOptionsTitle = document.getElementById("pairOptionsTitle");
+
+    const pairOptionsTitle = document.getElementById("pairOptionsTitle");       //initializes modal variables
     const statusText = document.getElementById("modalPairStatus");
 
     rosteredPairsList = document.getElementById("rosteredPairsList");               //declares both pairs lists
     unrosteredPairsList = document.getElementById("unrosteredPairsList");
 
-    let selectedPair = null; 
+    let pairID, pairName;
 
-    function closePairOptions() 
-    {
-        pairOptionsModal.style.display = "none";
-        selectedPair = null;
-    }
     let selectedPair = null;                    //initializes selectedPair to null
 
-    async function loadPairInfo(event) 
     async function fetchPairInfo(pairID)        //fetches pair info from pairID
     {
         try 
@@ -926,24 +919,95 @@ document.addEventListener("DOMContentLoaded", function ()               //handle
             console.error("Error fetching pair info:", error);
         }
     }
+
+    async function loadPairInfo(event)      //loads pair info when pair is clicked
+    {
+        const pairBox = event.target.closest(".pair-box");
+        if (!pairBox) return;
+
+        const pairID = pairBox.getAttribute("data-pair-id");              //grabs pair name as well as ID
+        const pairName = pairBox.querySelector("h3").innerText;
+
+        console.log("Pair ID:", pairID);
+        try 
+        {
+            const data = await fetchPairInfo(pairID);       //fetches pair info from pairID
+            selectedPair = data;          
         } catch (error) 
         {
             console.error("Error fetching pair info:", error);
         }
 
         pairOptionsTitle.innerText = pairName;
-        if (selectedPair.Rostered == 1)
+
+        if (selectedPair.pair_info.Rostered == 1)
         {
-            statusText.innerHTML = "Rostered"
+            statusText.innerHTML = "Rostered";
         }
         else
         {
-            statusText.innerHTML = "Unrostored"
+            statusText.innerHTML = "Unrostored";
+        }
+    }
+
+    async function updateRosterStatus(event)            //flips and stores the Rostered value
+    {
+        console.log("started updateRosterStatus");
+        
+        if (!selectedPair || !selectedPair.pair_info)           //ensures selectedPair is set
+        {
+            console.error("No pair selected!");
+            return;
+        }
+
+        pairID = selectedPair.pair_info.PairID;              //grabs pair name as well as ID
+        pairName = pairOptionsTitle.innerText;
+
+        console.log("Pair ID:", pairID);
+        console.log("Current Rostered Value:", selectedPair.pair_info.Rostered);
+
+        const newRosteredStatus = !selectedPair.pair_info.Rostered;           //flips and stores the Rostered value
+
+        const confirmation = confirm(`Are you sure you want to update the roster status for ${pairName}?`);       //confirmation box to ensure the user wants to update the roster status
+        if (!confirmation) 
+            return;               
+
+        try
+        {
+            const response = await fetch(`http://localhost:8000/pair/updateRoster`, 
+            {
+                method: "PUT",
+                headers: 
+                {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ pair_id: pairID, Rostered: newRosteredStatus })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) 
+            {
+                selectedPair.pair_info.Rostered = newRosteredStatus;                    //updates the stored value locally
+                statusText.innerHTML = newRosteredStatus ? "Rostered" : "Unrostered";   //updates UI instantly without needing to re-fetch
+                
+                fetchPairs(currentGameID);                                                           //re-fetches pairs to update the lists
+                console.log("Rostered status updated successfully:", result);
+            } 
+            else 
+            {
+                console.error("Error updating Rostered status:", result.message);
+            }
+        }catch (error)
+        {
+            console.error("Error updating roster status:", error);
         }
     }
 
     rosteredPairsList.addEventListener("click", loadPairInfo);
     unrosteredPairsList.addEventListener("click", loadPairInfo);
+    
+    toggleRosterButton.addEventListener("click", updateRosterStatus);
 });
 
 
