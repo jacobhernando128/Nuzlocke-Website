@@ -922,6 +922,55 @@ app.get("/pair/info", (req, res, next) => // Gets all information for a specific
 
 
 
+app.put("/pair/updateRoster", (req, res, next) => // Updates the Rostered status for a specific pair  
+{  
+    let pairID = req.body.pair_id;
+    let newRosteredStatus = req.body.Rostered;
+
+    if (!pairID || newRosteredStatus === undefined) 
+    {
+        return res.status(400).json({ status: "error", message: "pair_id and Rostered status are required" });
+    }
+
+    let strCommand = `UPDATE tblPairs SET Rostered = ? WHERE PairID = ?`;
+
+    ConNuzlocke.getConnection((err, connection) => 
+    {
+        if (err) 
+        {
+            console.error("Database Connection Error:", err);
+            return res.status(500).json({ status: "error", message: "Database connection failed" });
+        }
+
+        connection.query(strCommand, [newRosteredStatus, pairID], (err, result) => 
+        {
+            connection.release(); 
+
+            if (err) 
+            {
+                console.error("Query Error:", err);
+                return res.status(500).json({ status: "error", message: "Query execution failed" });
+            }
+
+            if (result.affectedRows > 0) 
+            {
+                return res.status(200).json({ 
+                    status: "success", 
+                    message: "Rostered status updated successfully", 
+                    pair_id: pairID, 
+                    newRosteredStatus: newRosteredStatus 
+                });
+            } 
+            else 
+            {
+                return res.status(404).json({ status: "error", message: "Pair not found" });
+            }
+        });
+    });
+});
+
+
+
 app.listen(HTTP_PORT, () => {
     console.log(`Server is running on port ${HTTP_PORT}`);
 });
