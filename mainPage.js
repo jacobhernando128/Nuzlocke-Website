@@ -913,7 +913,7 @@ document.addEventListener("DOMContentLoaded", function ()               //handle
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            return await response.json();
+            return await response.json();                   //returns json response for other functions to use
         } catch (error) 
         {
             console.error("Error fetching pair info:", error);
@@ -938,11 +938,11 @@ document.addEventListener("DOMContentLoaded", function ()               //handle
             console.error("Error fetching pair info:", error);
         }
 
-        pairOptionsTitle.innerText = pairName;
+        pairOptionsTitle.innerText = pairName;              //updates pair name in the modal
 
         if (selectedPair.pair_info.Rostered == 1)
         {
-            statusText.innerHTML = "Rostered";
+            statusText.innerHTML = "Rostered";              //changes HTML to show if pair is rostered or not
         }
         else
         {
@@ -950,7 +950,7 @@ document.addEventListener("DOMContentLoaded", function ()               //handle
         }
     }
 
-    async function updateRosterStatus(event)            //flips and stores the Rostered value
+    async function updateRosterStatus(event)            //flips and stores the Rostered value while updating the HTML
     {
         console.log("started updateRosterStatus");
         
@@ -974,7 +974,7 @@ document.addEventListener("DOMContentLoaded", function ()               //handle
 
         try
         {
-            const response = await fetch(`http://localhost:8000/pair/updateRoster`, 
+            const response = await fetch(`http://localhost:8000/pair/updateRoster`,             //updates Rostered status for specified pairID
             {
                 method: "PUT",
                 headers: 
@@ -1004,10 +1004,58 @@ document.addEventListener("DOMContentLoaded", function ()               //handle
         }
     }
 
+    async function deletePair(event)            //deletes pair from database and updates HTML
+    {
+        if (!selectedPair || !selectedPair.pair_info)           //ensures selectedPair is set
+        {
+            console.error("No pair selected!");
+            return;
+        }
+
+        pairID = selectedPair.pair_info.PairID;              //grabs pair name as well as ID
+        pairName = pairOptionsTitle.innerText;
+
+        console.log("Pair ID:", pairID);
+
+        const confirmation = confirm(`Are you sure you want to delete the pair ${pairName}?`);       //confirmation box to ensure the user wants to delete the pair
+        if (!confirmation) 
+            return;               
+
+        try
+        {
+            const response = await fetch(`http://localhost:8000/pairs?pair_id=${pairID}`,           //deletes pair for specified pairID
+            {
+                method: "DELETE",
+                headers: 
+                {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ pair_id: pairID })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) 
+            {
+                alert(`Pair ${pairName} deleted successfully`);                    //alerts user if pair is successfully deleted
+                fetchPairs(currentGameID);                                         //re-fetches pairs to update the lists
+                console.log("Pair deleted successfully:", result);
+            } 
+            else 
+            {
+                console.error("Error deleting pair:", result.message);
+            }
+        }catch (error)
+        {
+            console.error("Error deleting pair:", error);
+        }
+    }
+
     rosteredPairsList.addEventListener("click", loadPairInfo);
     unrosteredPairsList.addEventListener("click", loadPairInfo);
     
     toggleRosterButton.addEventListener("click", updateRosterStatus);
+    deletePairButton.addEventListener("click", deletePair);
 });
 
 
